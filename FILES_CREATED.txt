@@ -1,0 +1,44 @@
+FICHIERS CRÉÉS - MATCH DETAIL
+==============================
+
+Tous les chemins sont absolus depuis le répertoire du projet.
+
+1. HOOK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+C:\Users\bloraydev\Documents\GitHub Projets\betlab-web\lib\hooks\use-match-detail.ts
+(118 lignes)
+
+2. COMPOSANTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+C:\Users\bloraydev\Documents\GitHub Projets\betlab-web\lib\components\match-detail\match-header.tsx
+(212 lignes)
+
+C:\Users\bloraydev\Documents\GitHub Projets\betlab-web\lib\components\match-detail\tabs-navigation.tsx
+(133 lignes)
+
+C:\Users\bloraydev\Documents\GitHub Projets\betlab-web\lib\components\match-detail\predictions-tab.tsx
+(115 lignes)
+
+C:\Users\bloraydev\Documents\GitHub Projets\betlab-web\lib\components\match-detail\analysis-tab.tsx
+(91 lignes)
+
+C:\Users\bloraydev\Documents\GitHub Projets\betlab-web\lib\components\match-detail\h2h-tab.tsx
+(108 lignes)
+
+C:\Users\bloraydev\Documents\GitHub Projets\betlab-web\lib\components\match-detail\index.ts
+(10 lignes)
+
+3. PAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+C:\Users\bloraydev\Documents\GitHub Projets\betlab-web\app\(main)\match\[id]\page.tsx
+(172 lignes)
+
+4. DOCUMENTATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+C:\Users\bloraydev\Documents\GitHub Projets\betlab-web\lib\components\match-detail\README.md
+(296 lignes)
+
+C:\Users\bloraydev\Documents\GitHub Projets\betlab-web\lib\components\match-detail\IMPLEMENTATION_NOTES.md
+(~200 lignes)
+
+TOTAL: 10 fichiers, 1255+ lignes de code

@@ -1,0 +1,209 @@
+{
+  "ConfidenceBadge": {
+    "file": "lib/components/ui/confidence-badge.tsx",
+    "description": "Badge de niveau de confiance avec 3 niveaux (high/medium/low)",
+    "props": {
+      "level": {
+        "type": "'high' | 'medium' | 'low'",
+        "required": true,
+        "description": "Niveau de confiance"
+      },
+      "size": {
+        "type": "'sm' | 'md' | 'lg'",
+        "required": false,
+        "default": "md",
+        "description": "Taille du badge (sm=24px, md=32px, lg=40px)"
+      },
+      "showLabel": {
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Afficher le label texte (Élevé/Moyen/Faible)"
+      },
+      "showIcon": {
+        "type": "boolean",
+        "required": false,
+        "default": true,
+        "description": "Afficher l'icône (TrendingUp/Minus/TrendingDown)"
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "description": "Classes CSS additionnelles"
+      }
+    },
+    "colors": {
+      "high": "#10B981 (vert success)",
+      "medium": "#F59E0B (orange warning)",
+      "low": "#EF4444 (rouge error)"
+    },
+    "labels": {
+      "high": "Élevé",
+      "medium": "Moyen",
+      "low": "Faible"
+    },
+    "icons": {
+      "high": "TrendingUp",
+      "medium": "Minus",
+      "low": "TrendingDown"
+    },
+    "examples": [
+      "<ConfidenceBadge level=\"high\" showLabel />",
+      "<ConfidenceBadge level=\"medium\" size=\"lg\" />",
+      "<ConfidenceBadge level=\"low\" size=\"sm\" />"
+    ]
+  },
+  "EdgeChip": {
+    "file": "lib/components/ui/edge-chip.tsx",
+    "description": "Chip d'affichage du pourcentage d'avantage (edge)",
+    "props": {
+      "edge": {
+        "type": "number",
+        "required": true,
+        "description": "Valeur du edge en pourcentage (ex: 8.2 pour 8.2%)"
+      },
+      "size": {
+        "type": "'sm' | 'md'",
+        "required": false,
+        "default": "md",
+        "description": "Taille du chip (sm=24px, md=32px)"
+      },
+      "showLabel": {
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Afficher 'Edge:' avant le pourcentage"
+      },
+      "showIcon": {
+        "type": "boolean",
+        "required": false,
+        "default": true,
+        "description": "Afficher l'icône TrendingUp"
+      },
+      "showTooltip": {
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Afficher un tooltip avec explication du edge"
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "description": "Classes CSS additionnelles"
+      }
+    },
+    "thresholds": {
+      "excellent": {
+        "condition": "> 10%",
+        "color": "#10B981 (vert)",
+        "animation": "pulse"
+      },
+      "good": {
+        "condition": ">= 5%",
+        "color": "#C8DC3F (lime)",
+        "animation": "none"
+      },
+      "fair": {
+        "condition": ">= 2%",
+        "color": "#F59E0B (orange)",
+        "animation": "none"
+      },
+      "low": {
+        "condition": "< 2%",
+        "color": "#6B7280 (gris)",
+        "animation": "none"
+      }
+    },
+    "format": "+X.X% ou -X.X% avec 1 décimale",
+    "utilities": {
+      "getEdgeCategory": "Détermine la catégorie d'edge",
+      "formatEdge": "Formate l'edge en pourcentage avec signe"
+    },
+    "examples": [
+      "<EdgeChip edge={12.5} />",
+      "<EdgeChip edge={6.3} showLabel />",
+      "<EdgeChip edge={1.8} size=\"sm\" />",
+      "<EdgeChip edge={8.4} showTooltip />",
+      "<EdgeChip edge={-2.3} />"
+    ]
+  },
+  "LiveBadge": {
+    "file": "lib/components/ui/live-badge.tsx",
+    "description": "Badge animé pour indiquer les matchs en direct",
+    "props": {
+      "size": {
+        "type": "'sm' | 'md'",
+        "required": false,
+        "default": "md",
+        "description": "Taille du badge (sm=24px, md=28px)"
+      },
+      "variant": {
+        "type": "'solid' | 'outline' | 'ghost'",
+        "required": false,
+        "default": "solid",
+        "description": "Variant visuel du badge"
+      },
+      "animated": {
+        "type": "boolean",
+        "required": false,
+        "default": true,
+        "description": "Activer l'animation pulse"
+      },
+      "showDot": {
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Afficher le dot indicateur avant le texte"
+      },
+      "compact": {
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Mode compact (juste le dot, pas de texte)"
+      },
+      "showGlow": {
+        "type": "boolean",
+        "required": false,
+        "default": false,
+        "description": "Afficher l'effet glow lumineux"
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "description": "Classes CSS additionnelles"
+      }
+    },
+    "variants": {
+      "solid": "Fond rouge plein (#DC2626), texte blanc",
+      "outline": "Bordure rouge, fond transparent, texte rouge",
+      "ghost": "Fond rouge transparent (#DC2626/10), texte rouge"
+    },
+    "color": "#DC2626 (rouge vif)",
+    "text": "LIVE (toujours en majuscules)",
+    "examples": [
+      "<LiveBadge />",
+      "<LiveBadge showDot />",
+      "<LiveBadge showDot showGlow />",
+      "<LiveBadge variant=\"outline\" />",
+      "<LiveBadge compact />",
+      "<LiveBadge size=\"sm\" animated={false} />"
+    ]
+  },
+  "metadata": {
+    "batch": "BATCH 2",
+    "agent": "Agent 1",
+    "created": "2025-11-06",
+    "framework": "Next.js 16 + React + TypeScript",
+    "styling": "Tailwind CSS + CVA",
+    "icons": "lucide-react",
+    "base": "shadcn/ui Badge component",
+    "features": [
+      "Mobile-first (touch targets >= 32px)",
+      "Dark mode support",
+      "Accessible (ARIA labels)",
+      "CSS animations",
+      "TypeScript strict",
+      "JSDoc comments"
+    ]
+  }
+}

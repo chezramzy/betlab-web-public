@@ -1,0 +1,172 @@
+{
+  "Import Home Components": {
+    "prefix": "importhome",
+    "body": [
+      "import {",
+      "  CalendarWidget,",
+      "  SportSelector,",
+      "  LeaguesSelector,",
+      "  PredictionsSelector,",
+      "  PredictionType,",
+      "  FiltersPanel,",
+      "  ConfidenceLevel,",
+      "} from \"@/lib/components/home\""
+    ],
+    "description": "Import tous les composants Home"
+  },
+  "CalendarWidget Component": {
+    "prefix": "calendarwidget",
+    "body": [
+      "<CalendarWidget",
+      "  selectedDate={${1:selectedDate}}",
+      "  onDateChange={${2:setSelectedDate}}",
+      "  matchCountsByDate={${3:matchCountsByDate}}",
+      "/>"
+    ],
+    "description": "Composant CalendarWidget"
+  },
+  "SportSelector Component": {
+    "prefix": "sportselector",
+    "body": ["<SportSelector />"],
+    "description": "Composant SportSelector (intégré avec Zustand)"
+  },
+  "LeaguesSelector Component": {
+    "prefix": "leaguesselector",
+    "body": [
+      "<LeaguesSelector",
+      "  leagues={${1:leagues}}",
+      "  selectedLeagueId={${2:selectedLeagueId}}",
+      "  onLeagueChange={${3:setSelectedLeagueId}}",
+      "/>"
+    ],
+    "description": "Composant LeaguesSelector"
+  },
+  "PredictionsSelector Component": {
+    "prefix": "predictionsselector",
+    "body": [
+      "<PredictionsSelector",
+      "  selectedType={${1:selectedType}}",
+      "  onTypeChange={${2:setSelectedType}}",
+      "/>"
+    ],
+    "description": "Composant PredictionsSelector"
+  },
+  "FiltersPanel Component": {
+    "prefix": "filterspanel",
+    "body": [
+      "<FiltersPanel",
+      "  selectedConfidences={${1:selectedConfidences}}",
+      "  onConfidencesChange={${2:setSelectedConfidences}}",
+      "  xGRange={${3:xGRange}}",
+      "  onXGRangeChange={${4:setXGRange}}",
+      "  minProbability={${5:minProbability}}",
+      "  onMinProbabilityChange={${6:setMinProbability}}",
+      "/>"
+    ],
+    "description": "Composant FiltersPanel"
+  },
+  "Home Page State": {
+    "prefix": "homestate",
+    "body": [
+      "const [selectedDate, setSelectedDate] = useState(new Date())",
+      "const [selectedLeague, setSelectedLeague] = useState<string | \"all\" | \"favorites\">(\"all\")",
+      "const [selectedPrediction, setSelectedPrediction] = useState<PredictionType>(\"internal\")",
+      "const [selectedConfidences, setSelectedConfidences] = useState<ConfidenceLevel[]>([\"high\"])",
+      "const [xGRange, setXGRange] = useState<[number, number]>([0, 5])",
+      "const [minProbability, setMinProbability] = useState(50)"
+    ],
+    "description": "State management pour la page Home"
+  },
+  "Use Sport Store": {
+    "prefix": "usesportstore",
+    "body": [
+      "const { activeSport, setActiveSport } = useSportStore()"
+    ],
+    "description": "Hook Zustand pour le sport actif"
+  },
+  "Match Counts Map": {
+    "prefix": "matchcounts",
+    "body": [
+      "const matchCountsByDate = new Map<string, number>([",
+      "  [\"${1:2025-11-07}\", ${2:15}],",
+      "  [\"${3:2025-11-08}\", ${4:12}],",
+      "])"
+    ],
+    "description": "Map des compteurs de matchs par date"
+  },
+  "League Array": {
+    "prefix": "leagues",
+    "body": [
+      "const leagues = [",
+      "  { id: \"${1:1}\", name: \"${2:Premier League}\", matchCount: ${3:10}, logo: \"${4:/logo.png}\" },",
+      "]"
+    ],
+    "description": "Array des ligues"
+  },
+  "Full Home Page Template": {
+    "prefix": "homepagetemplate",
+    "body": [
+      "\"use client\"",
+      "",
+      "import { useState } from \"react\"",
+      "import {",
+      "  CalendarWidget,",
+      "  SportSelector,",
+      "  LeaguesSelector,",
+      "  PredictionsSelector,",
+      "  PredictionType,",
+      "  FiltersPanel,",
+      "  ConfidenceLevel,",
+      "} from \"@/lib/components/home\"",
+      "",
+      "export default function ${1:HomePage}() {",
+      "  // State",
+      "  const [selectedDate, setSelectedDate] = useState(new Date())",
+      "  const [selectedLeague, setSelectedLeague] = useState<string | \"all\" | \"favorites\">(\"all\")",
+      "  const [selectedPrediction, setSelectedPrediction] = useState<PredictionType>(\"internal\")",
+      "  const [selectedConfidences, setSelectedConfidences] = useState<ConfidenceLevel[]>([\"high\"])",
+      "  const [xGRange, setXGRange] = useState<[number, number]>([0, 5])",
+      "  const [minProbability, setMinProbability] = useState(50)",
+      "",
+      "  // Data (à remplacer par vos données réelles)",
+      "  const matchCountsByDate = new Map()",
+      "  const leagues = []",
+      "",
+      "  return (",
+      "    <div className=\"space-y-4 p-4\">",
+      "      <CalendarWidget",
+      "        selectedDate={selectedDate}",
+      "        onDateChange={setSelectedDate}",
+      "        matchCountsByDate={matchCountsByDate}",
+      "      />",
+      "",
+      "      <SportSelector />",
+      "",
+      "      <LeaguesSelector",
+      "        leagues={leagues}",
+      "        selectedLeagueId={selectedLeague}",
+      "        onLeagueChange={setSelectedLeague}",
+      "      />",
+      "",
+      "      <PredictionsSelector",
+      "        selectedType={selectedPrediction}",
+      "        onTypeChange={setSelectedPrediction}",
+      "      />",
+      "",
+      "      <FiltersPanel",
+      "        selectedConfidences={selectedConfidences}",
+      "        onConfidencesChange={setSelectedConfidences}",
+      "        xGRange={xGRange}",
+      "        onXGRangeChange={setXGRange}",
+      "        minProbability={minProbability}",
+      "        onMinProbabilityChange={setMinProbability}",
+      "      />",
+      "",
+      "      {/* Vos Match Cards ici */}",
+      "    </div>",
+      "  )",
+      "}"
+    ],
+    "description": "Template complet de page Home avec tous les composants"
+  }
+}

@@ -1,0 +1,208 @@
+{
+  "Pull to Refresh Setup": {
+    "prefix": "ptr-setup",
+    "body": [
+      "const { scrollableRef, pullDistance, isRefreshing } = usePullToRefresh({",
+      "  onRefresh: async () => {",
+      "    await ${1:refetch}()",
+      "  },",
+      "  threshold: 80,",
+      "})",
+      "",
+      "return (",
+      "  <div ref={scrollableRef} className=\"relative min-h-screen overflow-y-auto\">",
+      "    <PullToRefreshIndicator",
+      "      pullDistance={pullDistance}",
+      "      isRefreshing={isRefreshing}",
+      "    />",
+      "    $0",
+      "  </div>",
+      ")"
+    ],
+    "description": "Pull to refresh setup complete"
+  },
+
+  "Mobile Page Wrapper": {
+    "prefix": "mpw",
+    "body": [
+      "<MobilePageWrapper onRefresh={${1:refetch}}>",
+      "  $0",
+      "</MobilePageWrapper>"
+    ],
+    "description": "Mobile page wrapper with pull to refresh"
+  },
+
+  "Ripple Button": {
+    "prefix": "rbtn",
+    "body": [
+      "<RippleButton",
+      "  onClick={${1:handleClick}}",
+      "  className=\"${2:px-4 py-2 bg-navy text-white rounded-lg}\"",
+      "  haptic={${3:true}}",
+      ">",
+      "  ${4:Button Text}",
+      "</RippleButton>"
+    ],
+    "description": "Ripple button with haptic feedback"
+  },
+
+  "Success Toast": {
+    "prefix": "toast",
+    "body": [
+      "const { show, message, showSuccess, hideSuccess } = useSuccessToast()",
+      "",
+      "const ${1:handleAction} = async () => {",
+      "  await ${2:doSomething}()",
+      "  showSuccess('${3:Action réussie !}')",
+      "}",
+      "",
+      "return (",
+      "  <>",
+      "    <SuccessToast",
+      "      show={show}",
+      "      message={message}",
+      "      onClose={hideSuccess}",
+      "    />",
+      "    $0",
+      "  </>",
+      ")"
+    ],
+    "description": "Success toast setup"
+  },
+
+  "Haptic Feedback": {
+    "prefix": "haptic",
+    "body": [
+      "const { vibrate } = useHapticFeedback()",
+      "",
+      "const ${1:handleClick} = () => {",
+      "  vibrate('${2|light,medium,heavy,success,error|}')",
+      "  $0",
+      "}"
+    ],
+    "description": "Haptic feedback hook"
+  },
+
+  "Swipeable Card": {
+    "prefix": "swipe-card",
+    "body": [
+      "<MatchCardSwipeable",
+      "  matchId={${1:match.id}}",
+      "  isFavorite={${2:isFavorite}}",
+      "  onFavoriteToggle={${3:toggleFavorite}}",
+      "  onShare={${4:shareMatch}}",
+      ">",
+      "  ${5:<MatchCard match={match} />}",
+      "</MatchCardSwipeable>"
+    ],
+    "description": "Swipeable match card"
+  },
+
+  "Optimistic Favorite": {
+    "prefix": "opt-fav",
+    "body": [
+      "const { optimisticFavorites, addOptimisticFavorite } = useOptimisticFavorite(${1:initialFavorites})",
+      "",
+      "const toggleFavorite = async (${2:id}: string) => {",
+      "  addOptimisticFavorite(${2:id})",
+      "  try {",
+      "    await ${3:api.toggleFavorite}(${2:id})",
+      "  } catch (error) {",
+      "    // Handle error",
+      "  }",
+      "}"
+    ],
+    "description": "Optimistic favorite toggle"
+  },
+
+  "Loading Skeleton": {
+    "prefix": "skeleton",
+    "body": [
+      "if (isLoading) {",
+      "  return (",
+      "    <div className=\"space-y-4\">",
+      "      {Array.from({ length: ${1:5} }).map((_, i) => (",
+      "        <${2|MatchCardSkeleton,Skeleton|}${2/(.*)/(?1: )/}${3:className=\"w-full h-20\"} key={i} />",
+      "      ))}",
+      "    </div>",
+      "  )",
+      "}"
+    ],
+    "description": "Loading skeleton list"
+  },
+
+  "Empty State": {
+    "prefix": "empty",
+    "body": [
+      "<EmptyState",
+      "  icon={<${1:Inbox} className=\"w-12 h-12\" />}",
+      "  title=\"${2:Aucune donnée}\"",
+      "  message=\"${3:Il n'y a aucun élément à afficher.}\"",
+      "  action={{",
+      "    label: \"${4:Actualiser}\",",
+      "    onClick: ${5:handleRefresh},",
+      "  }}",
+      "/>"
+    ],
+    "description": "Empty state component"
+  },
+
+  "Error State": {
+    "prefix": "error-state",
+    "body": [
+      "<ErrorState",
+      "  title=\"${1:Erreur de chargement}\"",
+      "  message={${2:error.message} || '${3:Impossible de charger les données}'}",
+      "  onRetry={${4:refetch}}",
+      "/>"
+    ],
+    "description": "Error state with retry"
+  },
+
+  "Complete Mobile Page": {
+    "prefix": "mobile-page",
+    "body": [
+      "'use client'",
+      "",
+      "import { MobilePageWrapper } from '@/lib/components/layouts/mobile-page-wrapper'",
+      "import { useSuccessToast } from '@/lib/hooks/use-success-toast'",
+      "import { RippleButton } from '@/lib/components/ui/ripple-button'",
+      "import { MatchCardSkeleton } from '@/lib/components/cards/match-card-skeleton'",
+      "import { ErrorState } from '@/lib/components/ui/error-state'",
+      "import { EmptyState } from '@/lib/components/ui/empty-state'",
+      "",
+      "export default function ${1:MyPage}() {",
+      "  const { data, isLoading, isError, error, refetch } = ${2:useMyData}()",
+      "  const { showSuccess } = useSuccessToast()",
+      "",
+      "  if (isError) {",
+      "    return <ErrorState message={error.message} onRetry={refetch} />",
+      "  }",
+      "",
+      "  return (",
+      "    <MobilePageWrapper onRefresh={refetch}>",
+      "      <div className=\"p-4 space-y-4\">",
+      "        <h1>${3:Page Title}</h1>",
+      "",
+      "        {isLoading ? (",
+      "          <>",
+      "            <MatchCardSkeleton />",
+      "            <MatchCardSkeleton />",
+      "          </>",
+      "        ) : data.length === 0 ? (",
+      "          <EmptyState title=\"${4:Aucune donnée}\" />",
+      "        ) : (",
+      "          data.map(item => (",
+      "            <div key={item.id}>",
+      "              {/* ${5:Your content} */}",
+      "            </div>",
+      "          ))",
+      "        )}",
+      "      </div>",
+      "    </MobilePageWrapper>",
+      "  )",
+      "}"
+    ],
+    "description": "Complete mobile page template"
+  }
+}
