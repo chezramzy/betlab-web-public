@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  cacheComponents: true,
+  reactCompiler: true,
+
   // Configuration des images pour optimisation
   images: {
     remotePatterns: [
@@ -40,6 +43,14 @@ const nextConfig: NextConfig = {
       'date-fns',
       'framer-motion',
     ],
+
+    // ✅ Server Actions configuration
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
+
+    turbopackFileSystemCacheForDev: true,
+    turbopackFileSystemCacheForBuild: true,
   },
 
   // Compiler optimizations
@@ -49,10 +60,8 @@ const nextConfig: NextConfig = {
     } : false,
   },
 
-  // Désactiver TypeScript errors pendant le build pour tester optimisations
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  // ✅ REMOVED: typescript.ignoreBuildErrors
+  // Build will now fail on TypeScript errors - good for code quality!
 };
 
 export default nextConfig;
