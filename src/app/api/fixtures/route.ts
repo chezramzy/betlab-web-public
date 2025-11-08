@@ -15,6 +15,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getFixtures } from "@/modules/fixtures/server/queries";
 
+export const runtime = "nodejs";
+
 export async function GET(request: NextRequest) {
   try {
     // Extract date from query params

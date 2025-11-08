@@ -136,13 +136,13 @@ export default function RegisterPage() {
               htmlFor="acceptTerms"
               className="text-sm font-normal cursor-pointer leading-tight"
             >
-              J'accepte les{" "}
+              J’accepte les{" "}
               <Link
                 href="/terms"
                 className="text-primary hover:underline"
                 target="_blank"
               >
-                conditions d'utilisation
+                conditions d’utilisation
               </Link>{" "}
               et la{" "}
               <Link

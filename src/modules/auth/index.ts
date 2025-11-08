@@ -16,3 +16,6 @@ export {
   resetPasswordAction,
   updatePasswordAction,
 } from "./server/actions";
+
+// UI
+export { AuthLayoutShell } from "./ui/auth-layout.client";

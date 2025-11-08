@@ -2,7 +2,7 @@ export interface AuthUser {
   id: string;
   email: string;
   createdAt: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface AuthActionResult<T = void> {
@@ -19,7 +19,7 @@ export interface SignInInput {
 export interface SignUpInput {
   email: string;
   password: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface ResetPasswordInput {

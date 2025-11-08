@@ -1,7 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { cacheLife, cacheTag } from "next/cache";
-import { env } from "@/core/config/env";
+import { betlabFetch } from "@/infra/services/betlab-api/client";
 import { TEAMS_CACHE } from "../cache/profile";
 import type { TeamStats } from "../domain/types";
 
@@ -39,21 +39,11 @@ function transformTeamStats(apiStats: ApiTeamStatsResponse["stats"]): TeamStats 
   };
 }
 
-const apiBaseUrl = env.NEXT_PUBLIC_API_BASE_URL;
-
 export const getTeamStats = cache(async (teamId: number): Promise<TeamStats> => {
   'use cache';
-  const url = `${apiBaseUrl}/api/teams/${teamId}/stats`;
   cacheTag(TEAMS_CACHE.tags.stats(teamId));
   cacheLife(TEAMS_CACHE.life.stats);
 
-  const response = await fetch(url, { cache: "force-cache" });
-
-  if (!response.ok) {
-    console.error(`Failed to fetch team stats for ${teamId}:`, response.statusText);
-    throw new Error(`Failed to fetch team stats: ${response.statusText}`);
-  }
-
-  const data: ApiTeamStatsResponse = await response.json();
+  const data = await betlabFetch<ApiTeamStatsResponse>(`/api/teams/${teamId}/stats`);
   return transformTeamStats(data.stats);
 });

@@ -4,6 +4,8 @@ import "server-only";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag, updateTag } from "next/cache";
 
+export const runtime = "nodejs";
+
 type RevalidatePayload = {
   tag?: string;
   strategy?: "revalidate" | "update";

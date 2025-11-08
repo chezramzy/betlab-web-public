@@ -1,15 +1,12 @@
 import "server-only";
 
+import type { HttpClient, HttpRequestOptions, HttpResponse } from "@/core/http/client";
 import { env } from "@/core/config/env";
 
-type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-
-export interface BetlabRequestInit extends RequestInit {
-  method?: HttpMethod;
-  searchParams?: Record<string, string | number | undefined>;
-}
-
-function buildUrl(path: string, searchParams?: Record<string, string | number | undefined>) {
+function buildUrl(
+  path: string,
+  searchParams?: Record<string, string | number | boolean | undefined>
+) {
   const url = new URL(path.replace(/^\//, ""), env.NEXT_PUBLIC_API_BASE_URL);
   if (searchParams) {
     Object.entries(searchParams).forEach(([key, value]) => {
@@ -21,24 +18,51 @@ function buildUrl(path: string, searchParams?: Record<string, string | number | 
   return url.toString();
 }
 
-export async function betlabFetch<TResponse>(
+async function executeRequest<TResponse, TBody = unknown>(
   path: string,
-  init: BetlabRequestInit = {}
-): Promise<TResponse> {
-  const url = buildUrl(path, init.searchParams);
+  options: HttpRequestOptions<TBody> = {}
+): Promise<HttpResponse<TResponse>> {
+  const { method = "GET", headers, body, searchParams } = options;
+  const url = buildUrl(path, searchParams);
+
   const response = await fetch(url, {
-    ...init,
+    method,
     headers: {
       "Content-Type": "application/json",
-      ...(init.headers || {}),
+      ...(headers || {}),
     },
+    body: body ? JSON.stringify(body) : undefined,
+    cache: method === "GET" ? "force-cache" : undefined,
   });
+
+  const data = (await response.json()) as TResponse;
 
   if (!response.ok) {
     const error = new Error(`BetLab API error ${response.status}: ${response.statusText}`);
-    console.error(error.message);
+    console.error(error.message, data);
     throw error;
   }
 
-  return (await response.json()) as TResponse;
+  return {
+    ok: true,
+    status: response.status,
+    data,
+  } satisfies HttpResponse<TResponse>;
+}
+
+export const betlabHttpClient: HttpClient = {
+  async request<TResponse, TBody = unknown>(
+    path: string,
+    options?: HttpRequestOptions<TBody>
+  ): Promise<HttpResponse<TResponse>> {
+    return executeRequest<TResponse, TBody>(path, options);
+  },
+};
+
+export async function betlabFetch<TResponse, TBody = unknown>(
+  path: string,
+  options?: HttpRequestOptions<TBody>
+): Promise<TResponse> {
+  const response = await betlabHttpClient.request<TResponse, TBody>(path, options);
+  return response.data;
 }

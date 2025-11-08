@@ -13,6 +13,8 @@ import {
   type PredictionType,
 } from "@/modules/predictions/server/queries";
 
+export const runtime = "nodejs";
+
 interface PredictionsRequest {
   fixtureIds: number[];
   type?: PredictionType;

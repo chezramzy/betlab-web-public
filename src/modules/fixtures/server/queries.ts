@@ -1,7 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { cacheLife, cacheTag } from "next/cache";
-import { env } from "@/core/config/env";
+import { betlabFetch } from "@/infra/services/betlab-api/client";
 import {
   getPredictions,
   type PredictionType,
@@ -83,23 +83,14 @@ function transformFixture(item: ApiFixtureResponse): Match {
   };
 }
 
-const apiBaseUrl = `${env.NEXT_PUBLIC_API_BASE_URL}`;
-
 export const getFixtures = cache(async (date: string): Promise<Match[]> => {
   'use cache';
   cacheTag(FIXTURES_CACHE.tags.byDate(date));
   cacheLife(FIXTURES_CACHE.life.byDate);
 
-  const url = `${apiBaseUrl}/api/fixtures?date=${date}`;
-
-  const response = await fetch(url, { cache: "force-cache" });
-
-  if (!response.ok) {
-    console.error(`Failed to fetch fixtures for ${date}:`, response.statusText);
-    throw new Error(`Failed to fetch fixtures: ${response.statusText}`);
-  }
-
-  const data: ApiFixtureResponse[] = await response.json();
+  const data = await betlabFetch<ApiFixtureResponse[]>("/api/fixtures", {
+    searchParams: { date },
+  });
   return data.map(transformFixture);
 });
 
@@ -108,16 +99,7 @@ export const getLiveFixtures = cache(async (): Promise<Match[]> => {
   cacheTag(FIXTURES_CACHE.tags.live());
   cacheLife(FIXTURES_CACHE.life.live);
 
-  const url = `${apiBaseUrl}/api/fixtures/live`;
-
-  const response = await fetch(url, { cache: "force-cache" });
-
-  if (!response.ok) {
-    console.error("Failed to fetch live fixtures:", response.statusText);
-    throw new Error(`Failed to fetch live fixtures: ${response.statusText}`);
-  }
-
-  const data: ApiFixtureResponse[] = await response.json();
+  const data = await betlabFetch<ApiFixtureResponse[]>("/api/fixtures/live");
   return data.map(transformFixture);
 });
 

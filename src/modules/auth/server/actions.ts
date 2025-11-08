@@ -3,6 +3,7 @@
 import "server-only";
 import { redirect } from "next/navigation";
 import { updateTag } from "next/cache";
+import type { User } from "@supabase/supabase-js";
 import { createServerSupabaseClient } from "@/infra/services/supabase/server-client";
 import { AUTH_CACHE } from "../cache/profile";
 import type {
@@ -17,12 +18,12 @@ import type {
 /**
  * Transform Supabase User to AuthUser
  */
-function transformUser(user: any): AuthUser {
+function transformUser(user: User): AuthUser {
   return {
     id: user.id,
     email: user.email!,
     createdAt: user.created_at,
-    metadata: user.user_metadata,
+    metadata: user.user_metadata as Record<string, unknown>,
   };
 }
 

@@ -1,7 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { cacheLife, cacheTag } from "next/cache";
-import { env } from "@/core/config/env";
+import { betlabFetch } from "@/infra/services/betlab-api/client";
 import {
   transform1X2ToPrediction,
   transformMarketsToOverUnder,
@@ -38,25 +38,23 @@ async function fetchSinglePrediction(
   type: PredictionType
 ): Promise<PredictionData | null> {
   const endpoint = getEndpointForType(type);
-  const baseUrl = env.NEXT_PUBLIC_API_BASE_URL;
 
   try {
     const [predictionResponse, oddsResponse] = await Promise.allSettled([
       endpoint === "1x2"
-        ? fetch(`${baseUrl}/v1/matches/${fixtureId}/probabilities/1x2`, {
-            cache: "force-cache",
-          })
-        : fetch(`${baseUrl}/v1/matches/${fixtureId}/probabilities/markets`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              model: "poisson",
-              cap: 10,
-              include_scores_top: 10,
-            }),
-            cache: "force-cache",
-          }),
-      fetch(`${baseUrl}/v1/matches/${fixtureId}/odds`, { cache: "force-cache" }),
+        ? betlabFetch<API1X2Response>(`/v1/matches/${fixtureId}/probabilities/1x2`)
+        : betlabFetch<APIMarketsResponse, { model: string; cap: number; include_scores_top: number }>(
+            `/v1/matches/${fixtureId}/probabilities/markets`,
+            {
+              method: "POST",
+              body: {
+                model: "poisson",
+                cap: 10,
+                include_scores_top: 10,
+              },
+            }
+          ),
+      betlabFetch<APIOddsResponse>(`/v1/matches/${fixtureId}/odds`),
     ]);
 
     if (predictionResponse.status === "rejected") {
@@ -64,21 +62,9 @@ async function fetchSinglePrediction(
       return null;
     }
 
-    const predictionRes = predictionResponse.value;
-    if (!predictionRes.ok) {
-      console.warn(`Failed to fetch predictions for ${fixtureId}:`, predictionRes.statusText);
-      return null;
-    }
+    const predictions = predictionResponse.value;
 
-    const predictions =
-      endpoint === "1x2"
-        ? ((await predictionRes.json()) as API1X2Response)
-        : ((await predictionRes.json()) as APIMarketsResponse);
-
-    const odds =
-      oddsResponse.status === "fulfilled" && oddsResponse.value.ok
-        ? ((await oddsResponse.value.json()) as APIOddsResponse)
-        : null;
+    const odds = oddsResponse.status === "fulfilled" ? oddsResponse.value : null;
 
     switch (type) {
       case "match_result":

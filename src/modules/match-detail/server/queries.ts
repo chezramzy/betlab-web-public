@@ -1,7 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { cacheLife, cacheTag } from "next/cache";
-import { env } from "@/core/config/env";
+import { betlabFetch } from "@/infra/services/betlab-api/client";
 import { MATCH_DETAIL_CACHE } from "../cache/profile";
 import type { MatchDetail } from "../domain/types";
 
@@ -85,40 +85,22 @@ function transformMatchDetail(response: ApiFixtureResponse): MatchDetail {
   };
 }
 
-const apiBaseUrl = env.NEXT_PUBLIC_API_BASE_URL;
-
 export const getMatchDetail = cache(async (fixtureId: number | string): Promise<MatchDetail> => {
   'use cache';
   const id = typeof fixtureId === "string" ? parseInt(fixtureId, 10) : fixtureId;
-  const url = `${apiBaseUrl}/api/fixtures/${id}`;
   cacheTag(MATCH_DETAIL_CACHE.tags.byFixture(id));
   cacheLife(MATCH_DETAIL_CACHE.life.detail);
 
-  const response = await fetch(url, { cache: "force-cache" });
-
-  if (!response.ok) {
-    console.error(`Failed to fetch match detail for ${id}:`, response.statusText);
-    throw new Error(`Failed to fetch match detail: ${response.statusText}`);
-  }
-
-  const data: ApiFixtureResponse = await response.json();
+  const data = await betlabFetch<ApiFixtureResponse>(`/api/fixtures/${id}`);
   return transformMatchDetail(data);
 });
 
 export const getLiveMatchDetail = cache(async (fixtureId: number | string): Promise<MatchDetail> => {
   'use cache';
   const id = typeof fixtureId === "string" ? parseInt(fixtureId, 10) : fixtureId;
-  const url = `${apiBaseUrl}/api/fixtures/${id}`;
   cacheTag(MATCH_DETAIL_CACHE.tags.byFixture(id));
   cacheLife(MATCH_DETAIL_CACHE.life.detail);
 
-  const response = await fetch(url, { cache: "force-cache" });
-
-  if (!response.ok) {
-    console.error(`Failed to fetch live match detail for ${id}:`, response.statusText);
-    throw new Error(`Failed to fetch live match detail: ${response.statusText}`);
-  }
-
-  const data: ApiFixtureResponse = await response.json();
+  const data = await betlabFetch<ApiFixtureResponse>(`/api/fixtures/${id}`);
   return transformMatchDetail(data);
 });
