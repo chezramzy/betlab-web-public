@@ -54,7 +54,7 @@ export function MatchDetailClient({ match }: MatchDetailClientProps) {
             <div className="bg-card border rounded-lg p-6">
               <h3 className="text-lg font-semibold mb-4">Historique (H2H)</h3>
               <p className="text-muted-foreground">
-                L'historique des confrontations sera bientôt disponible
+                L&apos;historique des confrontations sera bientôt disponible
               </p>
             </div>
           </div>

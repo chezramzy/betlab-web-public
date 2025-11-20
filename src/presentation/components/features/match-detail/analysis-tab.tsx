@@ -20,7 +20,7 @@ export function AnalysisTab({ match, prediction }: AnalysisTabProps) {
         <div className="bg-card border rounded-lg p-6">
           <h3 className="text-lg font-semibold mb-4">Analyse indisponible</h3>
           <p className="text-muted-foreground">
-            Les données d'analyse avancée ne sont pas disponibles pour ce match.
+            Les données d&apos;analyse avancée ne sont pas disponibles pour ce match.
           </p>
         </div>
       </div>

@@ -27,6 +27,18 @@ export class GetFixturesWithPredictionsUseCase {
     const isoDate =
       date?.toISOString().split("T")[0] ?? new Date().toISOString().split("T")[0];
 
+    // ✅ OPTIMIZED: Use web endpoint for match_result predictions (1x2)
+    // This fetches fixtures + predictions in one call instead of N+1 queries
+    if (predictionType === "match_result") {
+      try {
+        return await this.fixtureRepository.findByDateWithPredictions(isoDate);
+      } catch (error) {
+        console.warn("Failed to fetch optimized fixtures, falling back to legacy method:", error);
+        // Fall back to legacy method if optimized endpoint fails
+      }
+    }
+
+    // Legacy method for other prediction types or as fallback
     const matches = await this.fixtureRepository.findByDate(isoDate);
     if (matches.length === 0) {
       return matches;

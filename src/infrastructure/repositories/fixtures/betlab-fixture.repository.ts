@@ -1,7 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
-import type { Match } from "@/core/entities/fixtures/fixture.entity";
+import type { Match, MatchWithPrediction } from "@/core/entities/fixtures/fixture.entity";
 import type { IFixtureRepository } from "@/core/repositories/fixture.repository";
 import { betlabFetch } from "@/infrastructure/services/betlab-api/client";
 
@@ -93,6 +93,29 @@ const fetchLiveFixtures = cache(async (): Promise<Match[]> => {
   return data.map(transformFixture);
 });
 
+/**
+ * Web-optimized endpoint response (from /v1/web/matches/daily)
+ * Returns fixtures with predictions pre-loaded in one call
+ */
+interface WebDailyMatchesResponse {
+  date: string;
+  count: number;
+  matches: MatchWithPrediction[];
+}
+
+const fetchFixturesWithPredictions = cache(async (date: string): Promise<MatchWithPrediction[]> => {
+  const data = await betlabFetch<WebDailyMatchesResponse>("/v1/web/matches/daily", {
+    searchParams: { date },
+    cache: "no-store",
+  });
+
+  // Transform kickoffTime strings to Date objects
+  return data.matches.map(match => ({
+    ...match,
+    kickoffTime: new Date(match.kickoffTime),
+  }));
+});
+
 export class BetlabFixtureRepository implements IFixtureRepository {
   async findByDate(date: string): Promise<Match[]> {
     return fetchFixtures(date);
@@ -100,5 +123,9 @@ export class BetlabFixtureRepository implements IFixtureRepository {
 
   async findLive(): Promise<Match[]> {
     return fetchLiveFixtures();
+  }
+
+  async findByDateWithPredictions(date: string): Promise<MatchWithPrediction[]> {
+    return fetchFixturesWithPredictions(date);
   }
 }

@@ -11,11 +11,11 @@ const WebVitalsReporter = dynamic(
 );
 
 const InstallPrompt = dynamic(
-  () => import("@/presentation/components/pwa/install-prompt").then((m) => m.InstallPrompt)
+  () => import("@/shared/pwa/install-prompt").then((m) => m.InstallPrompt)
 );
 
 const ServiceWorkerRegister = dynamic(
-  () => import("@/presentation/components/pwa/service-worker-register").then((m) => m.ServiceWorkerRegister)
+  () => import("@/shared/pwa/service-worker-register").then((m) => m.ServiceWorkerRegister)
 );
 
 // Google Fonts temporarily disabled due to build environment restrictions

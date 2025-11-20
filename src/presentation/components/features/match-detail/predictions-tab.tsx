@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { cn } from "@/shared/utils"
 import type { MatchDetail } from "@/core/entities/match-detail/match-detail.entity"
-import type { PredictionData } from "@/core/entities/predictions/prediction.entity"
+import type { PredictionData, MatchResultPrediction } from "@/core/entities/predictions/prediction.entity"
 import { MatchResultCard, OverUnderCard, BTTSCard, CorrectScoreCard, HtFtCard } from "./prediction-cards"
 
 interface PredictionsTabProps {
@@ -98,14 +98,14 @@ export function PredictionsTab({ match, predictions }: PredictionsTabProps) {
         ) : hasProbabilities ? (
           <>
             {selectedType === "match_result" && (
-              <MatchResultCard prediction={prediction as any} match={match} />
+              <MatchResultCard prediction={prediction as MatchResultPrediction} match={match} />
             )}
             {selectedType === "over_under" && <OverUnderCard match={match} />}
             {selectedType === "both_teams_score" && <BTTSCard match={match} />}
             {selectedType === "correct_score" && <CorrectScoreCard match={match} />}
           </>
         ) : prediction && selectedType === "match_result" ? (
-          <MatchResultCard prediction={prediction as any} match={match} />
+          <MatchResultCard prediction={prediction as MatchResultPrediction} match={match} />
         ) : (
           renderNoData(
             "Les probabilités pour ce match ne sont pas encore disponibles. Cela peut arriver pour certaines compétitions ou des rencontres très anciennes."
