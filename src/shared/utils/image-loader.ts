@@ -47,8 +47,10 @@ export function generateBlurDataURL(
     </svg>
   `;
 
-  // Encode en base64
-  const base64 = Buffer.from(svg).toString('base64');
+  // Encode en base64 - utilise btoa() qui fonctionne côté client et serveur
+  const base64 = typeof window !== 'undefined'
+    ? btoa(svg)
+    : Buffer.from(svg).toString('base64');
   return `data:image/svg+xml;base64,${base64}`;
 }
 
