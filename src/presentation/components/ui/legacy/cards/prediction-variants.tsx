@@ -48,18 +48,18 @@ export function Over15Card({
         {/* Probabilités */}
         <div className="grid grid-cols-2 gap-4">
           <div className="rounded-xl bg-emerald-500/10 p-4 text-center">
-            <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
+            <p className="text-xs font-medium text-emerald-600">
               Over 1.5
             </p>
-            <p className="mt-2 text-3xl font-bold text-emerald-600 dark:text-emerald-400">
+            <p className="mt-2 text-3xl font-bold text-emerald-600">
               {overProbability}%
             </p>
           </div>
           <div className="rounded-xl bg-red-500/10 p-4 text-center">
-            <p className="text-xs font-medium text-red-600 dark:text-red-400">
+            <p className="text-xs font-medium text-red-600">
               Under 1.5
             </p>
-            <p className="mt-2 text-3xl font-bold text-red-600 dark:text-red-400">
+            <p className="mt-2 text-3xl font-bold text-red-600">
               {underProbability}%
             </p>
           </div>
@@ -120,18 +120,18 @@ export function BTTSCard({
         {/* Probabilités */}
         <div className="grid grid-cols-2 gap-4">
           <div className="rounded-xl bg-blue-500/10 p-4 text-center">
-            <p className="text-xs font-medium text-blue-600 dark:text-blue-400">
+            <p className="text-xs font-medium text-blue-600">
               BTTS Oui
             </p>
-            <p className="mt-2 text-3xl font-bold text-blue-600 dark:text-blue-400">
+            <p className="mt-2 text-3xl font-bold text-blue-600">
               {bttsYesProbability}%
             </p>
           </div>
           <div className="rounded-xl bg-slate-500/10 p-4 text-center">
-            <p className="text-xs font-medium text-slate-600 dark:text-slate-400">
+            <p className="text-xs font-medium text-slate-600">
               BTTS Non
             </p>
-            <p className="mt-2 text-3xl font-bold text-slate-600 dark:text-slate-400">
+            <p className="mt-2 text-3xl font-bold text-slate-600">
               {bttsNoProbability}%
             </p>
           </div>
@@ -355,19 +355,19 @@ export function CleanSheetCard({
         {/* Probabilities */}
         <div className="grid grid-cols-2 gap-4">
           <div className="rounded-xl bg-blue-500/10 p-4 text-center">
-            <p className="text-xs font-medium text-blue-600 dark:text-blue-400">
+            <p className="text-xs font-medium text-blue-600">
               Domicile
             </p>
-            <p className="mt-2 text-3xl font-bold text-blue-600 dark:text-blue-400">
+            <p className="mt-2 text-3xl font-bold text-blue-600">
               {homeCleanSheetProb}%
             </p>
             <p className="mt-1 text-xs text-muted-foreground">Clean Sheet</p>
           </div>
           <div className="rounded-xl bg-purple-500/10 p-4 text-center">
-            <p className="text-xs font-medium text-purple-600 dark:text-purple-400">
+            <p className="text-xs font-medium text-purple-600">
               Extérieur
             </p>
-            <p className="mt-2 text-3xl font-bold text-purple-600 dark:text-purple-400">
+            <p className="mt-2 text-3xl font-bold text-purple-600">
               {awayCleanSheetProb}%
             </p>
             <p className="mt-1 text-xs text-muted-foreground">Clean Sheet</p>
@@ -420,7 +420,7 @@ export function CornersCard({
           <p className="text-xs font-medium text-muted-foreground">
             Total corners attendus
           </p>
-          <p className="mt-2 text-5xl font-bold text-yellow-600 dark:text-yellow-400">
+          <p className="mt-2 text-5xl font-bold text-yellow-600">
             {totalCornersAvg}
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
@@ -470,26 +470,26 @@ export function InternalProbabilitiesCard({
         {/* Main probabilities */}
         <div className="grid grid-cols-3 gap-3">
           <div className="rounded-xl bg-green-500/10 p-4 text-center">
-            <p className="text-xs font-medium text-green-600 dark:text-green-400">
+            <p className="text-xs font-medium text-green-600">
               Victoire D.
             </p>
-            <p className="mt-2 text-2xl font-bold text-green-600 dark:text-green-400">
+            <p className="mt-2 text-2xl font-bold text-green-600">
               {homeWin}%
             </p>
           </div>
           <div className="rounded-xl bg-yellow-500/10 p-4 text-center">
-            <p className="text-xs font-medium text-yellow-600 dark:text-yellow-400">
+            <p className="text-xs font-medium text-yellow-600">
               Match Nul
             </p>
-            <p className="mt-2 text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+            <p className="mt-2 text-2xl font-bold text-yellow-600">
               {draw}%
             </p>
           </div>
           <div className="rounded-xl bg-blue-500/10 p-4 text-center">
-            <p className="text-xs font-medium text-blue-600 dark:text-blue-400">
+            <p className="text-xs font-medium text-blue-600">
               Victoire E.
             </p>
-            <p className="mt-2 text-2xl font-bold text-blue-600 dark:text-blue-400">
+            <p className="mt-2 text-2xl font-bold text-blue-600">
               {awayWin}%
             </p>
           </div>

@@ -11,9 +11,9 @@ interface MatchResultCardProps {
 }
 
 const confidenceVariants = {
-  high: { className: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200", label: "Confiance élevée" },
-  medium: { className: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200", label: "Confiance moyenne" },
-  low: { className: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200", label: "Confiance faible" },
+  high: { className: "bg-green-100 text-green-800", label: "Confiance élevée" },
+  medium: { className: "bg-yellow-100 text-yellow-800", label: "Confiance moyenne" },
+  low: { className: "bg-red-100 text-red-800", label: "Confiance faible" },
 }
 
 /**
@@ -30,7 +30,7 @@ export function MatchResultCard({ prediction, match }: MatchResultCardProps) {
       <div className="p-4 border-b">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-[var(--navy)] dark:text-[var(--lime)]" />
+            <Trophy className="w-5 h-5 text-[var(--navy)]" />
             <h3 className="text-lg font-semibold">Résultat du match</h3>
           </div>
           <span className={cn("px-3 py-1 rounded-full text-xs font-medium", confidenceConfig.className)}>
@@ -73,7 +73,7 @@ export function MatchResultCard({ prediction, match }: MatchResultCardProps) {
           {homeWin.odds && (
             <div className="flex justify-between items-center">
               <span className="text-xs text-muted-foreground">Cote juste</span>
-              <span className="text-sm font-semibold text-[var(--navy)] dark:text-[var(--lime)]">
+              <span className="text-sm font-semibold text-[var(--navy)]">
                 {homeWin.odds.toFixed(2)}
               </span>
             </div>
@@ -98,7 +98,7 @@ export function MatchResultCard({ prediction, match }: MatchResultCardProps) {
           {draw.odds && (
             <div className="flex justify-between items-center">
               <span className="text-xs text-muted-foreground">Cote juste</span>
-              <span className="text-sm font-semibold text-[var(--navy)] dark:text-[var(--lime)]">
+              <span className="text-sm font-semibold text-[var(--navy)]">
                 {draw.odds.toFixed(2)}
               </span>
             </div>
@@ -123,7 +123,7 @@ export function MatchResultCard({ prediction, match }: MatchResultCardProps) {
           {awayWin.odds && (
             <div className="flex justify-between items-center">
               <span className="text-xs text-muted-foreground">Cote juste</span>
-              <span className="text-sm font-semibold text-[var(--navy)] dark:text-[var(--lime)]">
+              <span className="text-sm font-semibold text-[var(--navy)]">
                 {awayWin.odds.toFixed(2)}
               </span>
             </div>
@@ -143,27 +143,27 @@ export function MatchResultCard({ prediction, match }: MatchResultCardProps) {
         <div className="pt-4 border-t">
           {homeWin.probability > draw.probability &&
             homeWin.probability > awayWin.probability && (
-              <div className="flex items-center justify-between p-3 bg-[var(--lime)]/10 dark:bg-[var(--lime)]/5 rounded-lg">
+              <div className="flex items-center justify-between p-3 bg-[var(--lime)]/10 rounded-lg">
                 <span className="text-sm font-medium">Meilleur pari</span>
-                <span className="text-sm font-bold text-[var(--navy)] dark:text-[var(--lime)]">
+                <span className="text-sm font-bold text-[var(--navy)]">
                   {match.homeTeam.name} gagne
                 </span>
               </div>
             )}
           {draw.probability > homeWin.probability &&
             draw.probability > awayWin.probability && (
-              <div className="flex items-center justify-between p-3 bg-[var(--lime)]/10 dark:bg-[var(--lime)]/5 rounded-lg">
+              <div className="flex items-center justify-between p-3 bg-[var(--lime)]/10 rounded-lg">
                 <span className="text-sm font-medium">Meilleur pari</span>
-                <span className="text-sm font-bold text-[var(--navy)] dark:text-[var(--lime)]">
+                <span className="text-sm font-bold text-[var(--navy)]">
                   Match nul
                 </span>
               </div>
             )}
           {awayWin.probability > homeWin.probability &&
             awayWin.probability > draw.probability && (
-              <div className="flex items-center justify-between p-3 bg-[var(--lime)]/10 dark:bg-[var(--lime)]/5 rounded-lg">
+              <div className="flex items-center justify-between p-3 bg-[var(--lime)]/10 rounded-lg">
                 <span className="text-sm font-medium">Meilleur pari</span>
-                <span className="text-sm font-bold text-[var(--navy)] dark:text-[var(--lime)]">
+                <span className="text-sm font-bold text-[var(--navy)]">
                   {match.awayTeam.name} gagne
                 </span>
               </div>

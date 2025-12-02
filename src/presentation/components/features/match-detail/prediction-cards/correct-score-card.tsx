@@ -9,9 +9,9 @@ interface CorrectScoreCardProps {
 }
 
 const confidenceVariants = {
-  high: { className: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200", label: "Confiance élevée" },
-  medium: { className: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200", label: "Confiance moyenne" },
-  low: { className: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200", label: "Confiance faible" },
+  high: { className: "bg-green-100 text-green-800", label: "Confiance élevée" },
+  medium: { className: "bg-yellow-100 text-yellow-800", label: "Confiance moyenne" },
+  low: { className: "bg-red-100 text-red-800", label: "Confiance faible" },
 }
 
 /**
@@ -55,7 +55,7 @@ export function CorrectScoreCard({ match }: CorrectScoreCardProps) {
       <div className="p-4 border-b">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Hash className="w-5 h-5 text-[var(--navy)] dark:text-[var(--lime)]" />
+            <Hash className="w-5 h-5 text-[var(--navy)]" />
             <h3 className="text-lg font-semibold">Score Exact</h3>
           </div>
           <span className={cn("px-3 py-1 rounded-full text-xs font-medium", confidenceConfig.className)}>
@@ -66,9 +66,9 @@ export function CorrectScoreCard({ match }: CorrectScoreCardProps) {
 
       <div className="p-4 space-y-6">
         {/* Most Likely Score */}
-        <div className="text-center p-6 bg-[var(--lime)]/10 dark:bg-[var(--lime)]/5 rounded-lg border-2 border-[var(--lime)]">
+        <div className="text-center p-6 bg-[var(--lime)]/10 rounded-lg border-2 border-[var(--lime)]">
           <div className="text-xs text-muted-foreground font-medium mb-2">Score le plus probable</div>
-          <div className="text-4xl font-bold text-[var(--navy)] dark:text-[var(--lime)] mb-2">
+          <div className="text-4xl font-bold text-[var(--navy)] mb-2">
             {mostLikely}
           </div>
           <div className="text-sm text-muted-foreground">

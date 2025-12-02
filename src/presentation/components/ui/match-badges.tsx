@@ -28,7 +28,7 @@ export function MatchBadges({
     badges.push(
       <div
         key="form"
-        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 text-[10px] font-semibold"
+        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-orange-100 text-orange-700 text-[10px] font-semibold"
         title={`Forme excellente: ${(formIndex * 100).toFixed(0)}%`}
       >
         <Flame className="w-3 h-3" />
@@ -39,7 +39,7 @@ export function MatchBadges({
     badges.push(
       <div
         key="form"
-        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-[10px] font-semibold"
+        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-semibold"
         title={`Forme en baisse: ${(formIndex * 100).toFixed(0)}%`}
       >
         <TrendingUp className="w-3 h-3 rotate-180" />
@@ -53,7 +53,7 @@ export function MatchBadges({
     badges.push(
       <div
         key="rest"
-        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-[10px] font-semibold"
+        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-[10px] font-semibold"
         title={`${restDays.toFixed(1)} jours de repos`}
       >
         <Zap className="w-3 h-3" />
@@ -67,7 +67,7 @@ export function MatchBadges({
     badges.push(
       <div
         key="injury"
-        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 text-[10px] font-semibold"
+        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-[10px] font-semibold"
         title={`Joueurs disponibles: ${(injuryFactor * 100).toFixed(0)}%`}
       >
         <AlertTriangle className="w-3 h-3" />
@@ -81,7 +81,7 @@ export function MatchBadges({
     badges.push(
       <div
         key="value"
-        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-[10px] font-semibold"
+        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 text-[10px] font-semibold"
         title={`Value: +${(edge * 100).toFixed(1)}%`}
       >
         <Heart className="w-3 h-3" />
@@ -118,8 +118,8 @@ export function EdgeBadge({ edge, className }: EdgeBadgeProps) {
       className={cn(
         "inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold",
         isPositive
-          ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300"
-          : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300",
+          ? "bg-green-100 text-green-700"
+          : "bg-red-100 text-red-700",
         className
       )}
       title={isPositive ? "Bonne value" : "Mauvaise value"}

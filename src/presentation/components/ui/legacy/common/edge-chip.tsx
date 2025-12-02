@@ -22,8 +22,8 @@ export function EdgeChip({ edge, className, compact = false }: EdgeChipProps) {
       className={cn(
         "inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium",
         isPositive
-          ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-          : "bg-slate-500/10 text-slate-600 dark:text-slate-400",
+          ? "bg-emerald-500/10 text-emerald-600"
+          : "bg-slate-500/10 text-slate-600",
         className
       )}
     >

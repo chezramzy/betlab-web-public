@@ -64,7 +64,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-background dark:bg-background">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-background">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold tracking-tight text-foreground">

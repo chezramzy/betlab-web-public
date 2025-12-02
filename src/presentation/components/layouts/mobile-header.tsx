@@ -15,11 +15,10 @@
  */
 
 import * as React from 'react'
-import { ArrowLeft, Sun, Moon, Menu, Search, Bell } from 'lucide-react'
+import { ArrowLeft, Menu, Search, Bell } from 'lucide-react'
 import { cn } from '@/shared/utils'
 import { Button } from '@/presentation/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/presentation/components/ui/avatar'
-import { useTheme } from 'next-themes'
 
 export interface MobileHeaderProps {
   title?: string
@@ -29,7 +28,6 @@ export interface MobileHeaderProps {
   avatarSrc?: string
   avatarFallback?: string
   onAvatarClick?: () => void
-  showThemeToggle?: boolean
   showMenu?: boolean
   onMenuClick?: () => void
   showSearch?: boolean
@@ -50,7 +48,6 @@ export function MobileHeader({
   avatarSrc,
   avatarFallback = 'U',
   onAvatarClick,
-  showThemeToggle = true,
   showMenu = false,
   onMenuClick,
   showSearch = false,
@@ -62,17 +59,6 @@ export function MobileHeader({
   collapsed = false,
   className,
 }: MobileHeaderProps) {
-  const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = React.useState(false)
-
-  React.useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark')
-  }
-
   return (
     <header
       className={cn(
@@ -201,25 +187,6 @@ export function MobileHeader({
                 >
                   {notificationCount > 99 ? '99+' : notificationCount}
                 </span>
-              )}
-            </Button>
-          )}
-
-          {showThemeToggle && mounted && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              className={cn(
-                "shrink-0 hover:bg-[var(--lime)]/10",
-                "transition-all duration-200 active:scale-95"
-              )}
-              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-            >
-              {theme === 'dark' ? (
-                <Sun className="h-5 w-5 rotate-0 scale-100 transition-transform duration-200" />
-              ) : (
-                <Moon className="h-5 w-5 rotate-0 scale-100 transition-transform duration-200" />
               )}
             </Button>
           )}

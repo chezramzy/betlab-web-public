@@ -56,10 +56,10 @@ const edgeChipVariants = cva(
   {
     variants: {
       category: {
-        excellent: "bg-[var(--success)] text-white hover:shadow-md dark:bg-[var(--success)]/90",
-        good: "bg-[var(--lime)] text-[var(--navy)] hover:shadow-md dark:bg-[var(--lime)]/90",
-        fair: "bg-[var(--warning)] text-white hover:shadow-md dark:bg-[var(--warning)]/90",
-        low: "bg-[var(--gray)] text-white hover:shadow-md dark:bg-[var(--gray)]/80",
+        excellent: "bg-[var(--success)] text-white hover:shadow-md",
+        good: "bg-[var(--lime)] text-[var(--navy)] hover:shadow-md",
+        fair: "bg-[var(--warning)] text-white hover:shadow-md",
+        low: "bg-[var(--gray)] text-white hover:shadow-md",
       },
       size: {
         sm: "h-6 px-2 text-xs min-w-[48px]",

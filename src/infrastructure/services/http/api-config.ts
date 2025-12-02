@@ -27,18 +27,37 @@ export const ApiConfig = {
     metadata: '/metadata',
   },
 
-  // Popular League IDs (hardcodées)
+  // Popular League IDs - Synchronisé avec use-fixture-filters.ts
+  // Pour modifier cette liste, éditer POPULAR_LEAGUE_IDS dans use-fixture-filters.ts
   popularLeagueIds: new Set([
+    // Angleterre
     39,   // Premier League
+    40,   // Championship (2ème division)
+    // Espagne
     140,  // La Liga
+    // France
     61,   // Ligue 1
+    // Allemagne
     78,   // Bundesliga
+    79,   // 2. Bundesliga
+    // Italie
     135,  // Serie A
+    // Compétitions UEFA
     2,    // UEFA Champions League
     3,    // UEFA Europa League
-    94,   // Primeira Liga
-    88,   // Eredivisie
-    203,  // Süper Lig
+    848,  // UEFA Conference League
+    // Autres ligues européennes majeures
+    94,   // Primeira Liga (Portugal)
+    88,   // Eredivisie (Netherlands)
+    203,  // Süper Lig (Turkey)
+    // Coupes nationales majeures
+    81,   // DFB Pokal (Germany)
+    137,  // Coppa Italia (Italy)
+    143,  // Copa del Rey (Spain)
+    // Amérique
+    71,   // Serie A (Brazil)
+    128,  // Liga MX (Mexico)
+    253,  // MLS (USA)
   ]),
 
   // Retry configuration

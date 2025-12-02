@@ -34,14 +34,14 @@ export function AnalysisTab({ match, prediction }: AnalysisTabProps) {
       {/* Expected Goals */}
       <div className="bg-card border rounded-lg p-4">
         <div className="flex items-center gap-2 mb-4">
-          <Zap className="w-5 h-5 text-[var(--navy)] dark:text-[var(--lime)]" />
+          <Zap className="w-5 h-5 text-[var(--navy)]" />
           <h3 className="text-lg font-semibold">Expected Goals (xG)</h3>
         </div>
         <div className="grid grid-cols-2 gap-4">
           {/* Home xG */}
           <div className="space-y-2">
             <div className="text-sm text-muted-foreground">{match.homeTeam.name}</div>
-            <div className="text-3xl font-bold text-[var(--navy)] dark:text-[var(--lime)]">
+            <div className="text-3xl font-bold text-[var(--navy)]">
               {prediction.xG.home.toFixed(2)}
             </div>
             {prediction.xG_recent && (
@@ -54,7 +54,7 @@ export function AnalysisTab({ match, prediction }: AnalysisTabProps) {
           {/* Away xG */}
           <div className="space-y-2 text-right">
             <div className="text-sm text-muted-foreground">{match.awayTeam.name}</div>
-            <div className="text-3xl font-bold text-[var(--navy)] dark:text-[var(--lime)]">
+            <div className="text-3xl font-bold text-[var(--navy)]">
               {prediction.xG.away.toFixed(2)}
             </div>
             {prediction.xG_recent && (
@@ -70,7 +70,7 @@ export function AnalysisTab({ match, prediction }: AnalysisTabProps) {
       {analytics.formIndex && (
         <div className="bg-card border rounded-lg p-4">
           <div className="flex items-center gap-2 mb-4">
-            <TrendingUp className="w-5 h-5 text-[var(--navy)] dark:text-[var(--lime)]" />
+            <TrendingUp className="w-5 h-5 text-[var(--navy)]" />
             <h3 className="text-lg font-semibold">Forme récente</h3>
           </div>
           <div className="space-y-4">
@@ -80,9 +80,9 @@ export function AnalysisTab({ match, prediction }: AnalysisTabProps) {
                 <span className="text-sm font-medium">{match.homeTeam.name}</span>
                 <span className={cn(
                   "text-sm font-bold",
-                  analytics.formIndex.home > 0.3 ? "text-green-600 dark:text-green-400" :
-                  analytics.formIndex.home < -0.3 ? "text-red-600 dark:text-red-400" :
-                  "text-yellow-600 dark:text-yellow-400"
+                  analytics.formIndex.home > 0.3 ? "text-green-600" :
+                  analytics.formIndex.home < -0.3 ? "text-red-600" :
+                  "text-yellow-600"
                 )}>
                   {analytics.formIndex.home > 0 ? "+" : ""}{(analytics.formIndex.home * 100).toFixed(0)}%
                 </span>
@@ -104,9 +104,9 @@ export function AnalysisTab({ match, prediction }: AnalysisTabProps) {
                 <span className="text-sm font-medium">{match.awayTeam.name}</span>
                 <span className={cn(
                   "text-sm font-bold",
-                  analytics.formIndex.away > 0.3 ? "text-green-600 dark:text-green-400" :
-                  analytics.formIndex.away < -0.3 ? "text-red-600 dark:text-red-400" :
-                  "text-yellow-600 dark:text-yellow-400"
+                  analytics.formIndex.away > 0.3 ? "text-green-600" :
+                  analytics.formIndex.away < -0.3 ? "text-red-600" :
+                  "text-yellow-600"
                 )}>
                   {analytics.formIndex.away > 0 ? "+" : ""}{(analytics.formIndex.away * 100).toFixed(0)}%
                 </span>
@@ -129,7 +129,7 @@ export function AnalysisTab({ match, prediction }: AnalysisTabProps) {
       {analytics.ratings && (
         <div className="bg-card border rounded-lg p-4">
           <div className="flex items-center gap-2 mb-4">
-            <Users className="w-5 h-5 text-[var(--navy)] dark:text-[var(--lime)]" />
+            <Users className="w-5 h-5 text-[var(--navy)]" />
             <h3 className="text-lg font-semibold">Ratings ELO</h3>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -156,7 +156,7 @@ export function AnalysisTab({ match, prediction }: AnalysisTabProps) {
       {analytics.injuryFactor && (
         <div className="bg-card border rounded-lg p-4">
           <div className="flex items-center gap-2 mb-4">
-            <Heart className="w-5 h-5 text-[var(--navy)] dark:text-[var(--lime)]" />
+            <Heart className="w-5 h-5 text-[var(--navy)]" />
             <h3 className="text-lg font-semibold">Disponibilité des joueurs</h3>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -205,7 +205,7 @@ export function AnalysisTab({ match, prediction }: AnalysisTabProps) {
       {analytics.fatigue && (
         <div className="bg-card border rounded-lg p-4">
           <div className="flex items-center gap-2 mb-4">
-            <Clock className="w-5 h-5 text-[var(--navy)] dark:text-[var(--lime)]" />
+            <Clock className="w-5 h-5 text-[var(--navy)]" />
             <h3 className="text-lg font-semibold">Repos et fatigue</h3>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -245,7 +245,7 @@ export function AnalysisTab({ match, prediction }: AnalysisTabProps) {
       {analytics.defenseFactor && (
         <div className="bg-card border rounded-lg p-4">
           <div className="flex items-center gap-2 mb-4">
-            <Shield className="w-5 h-5 text-[var(--navy)] dark:text-[var(--lime)]" />
+            <Shield className="w-5 h-5 text-[var(--navy)]" />
             <h3 className="text-lg font-semibold">Force défensive</h3>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -265,7 +265,7 @@ export function AnalysisTab({ match, prediction }: AnalysisTabProps) {
       {analytics.headToHead && (
         <div className="bg-card border rounded-lg p-4">
           <div className="flex items-center gap-2 mb-4">
-            <Users className="w-5 h-5 text-[var(--navy)] dark:text-[var(--lime)]" />
+            <Users className="w-5 h-5 text-[var(--navy)]" />
             <h3 className="text-lg font-semibold">Historique des confrontations</h3>
           </div>
           <div className="space-y-3">

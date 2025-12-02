@@ -2,7 +2,7 @@
 
 /**
  * Theme Provider
- * Utilise next-themes pour gérer le thème dark/light
+ * Light mode uniquement
  */
 
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
@@ -12,8 +12,9 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return (
     <NextThemesProvider
       attribute="class"
-      defaultTheme="system"
-      enableSystem
+      defaultTheme="light"
+      forcedTheme="light"
+      enableSystem={false}
       disableTransitionOnChange
       {...props}
     >

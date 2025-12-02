@@ -65,23 +65,23 @@ const strengthConfig: Record<
   { color: string; bgColor: string; label: string }
 > = {
   weak: {
-    color: "text-red-600 dark:text-red-500",
-    bgColor: "bg-red-600 dark:bg-red-500",
+    color: "text-red-600",
+    bgColor: "bg-red-600",
     label: "Faible",
   },
   medium: {
-    color: "text-orange-600 dark:text-orange-500",
-    bgColor: "bg-orange-600 dark:bg-orange-500",
+    color: "text-orange-600",
+    bgColor: "bg-orange-600",
     label: "Moyen",
   },
   good: {
-    color: "text-[var(--lime)] dark:text-[var(--lime)]",
-    bgColor: "bg-[var(--lime)] dark:bg-[var(--lime)]",
+    color: "text-[var(--lime)]",
+    bgColor: "bg-[var(--lime)]",
     label: "Bon",
   },
   strong: {
-    color: "text-green-600 dark:text-green-500",
-    bgColor: "bg-green-600 dark:bg-green-500",
+    color: "text-green-600",
+    bgColor: "bg-green-600",
     label: "Fort",
   },
 }
@@ -126,7 +126,7 @@ export function PasswordStrength({ password, className }: PasswordStrengthProps)
               className={cn(
                 "flex h-4 w-4 items-center justify-center rounded-full transition-colors",
                 criterion.met
-                  ? "bg-green-600 dark:bg-green-500"
+                  ? "bg-green-600"
                   : "bg-muted border border-border"
               )}
             >

@@ -47,7 +47,7 @@ export function TabsNavigation({
                 "min-h-[44px]",
                 // Active/Inactive states
                 isActive
-                  ? "text-[var(--navy)] dark:text-[var(--lime)] scale-105"
+                  ? "text-[var(--navy)] scale-105"
                   : "text-muted-foreground hover:text-foreground"
               )}
               aria-selected={isActive}

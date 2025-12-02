@@ -33,9 +33,9 @@ const confidenceBadgeVariants = cva(
   {
     variants: {
       level: {
-        high: "bg-[var(--success)] text-white shadow-sm hover:shadow-md dark:bg-[var(--success)]/90",
-        medium: "bg-[var(--warning)] text-white shadow-sm hover:shadow-md dark:bg-[var(--warning)]/90",
-        low: "bg-[var(--error)] text-white shadow-sm hover:shadow-md dark:bg-[var(--error)]/90",
+        high: "bg-[var(--success)] text-white shadow-sm hover:shadow-md",
+        medium: "bg-[var(--warning)] text-white shadow-sm hover:shadow-md",
+        low: "bg-[var(--error)] text-white shadow-sm hover:shadow-md",
       },
       size: {
         sm: "h-6 px-2 text-xs min-w-[24px]",

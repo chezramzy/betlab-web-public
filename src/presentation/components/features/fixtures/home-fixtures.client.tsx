@@ -13,6 +13,7 @@
 
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import {
   CalendarWidget,
   SearchBar,
@@ -23,6 +24,7 @@ import {
   MatchList,
 } from "@/presentation/components/features/fixtures";
 import { useFixtureFilters } from "@/presentation/hooks/fixtures/use-fixture-filters";
+import { Button } from "@/presentation/components/ui/button";
 import type { MatchWithPrediction } from "@/core/entities/fixtures/fixture.entity";
 
 interface HomeFixturesClientProps {
@@ -54,6 +56,7 @@ export function HomeFixturesClient({ initialMatches }: HomeFixturesClientProps) 
     xGRange,
     minProbability,
     searchQuery,
+    showAllMatches,
     setSelectedDate,
     setSelectedLeagueId,
     setSelectedPredictionType,
@@ -61,9 +64,11 @@ export function HomeFixturesClient({ initialMatches }: HomeFixturesClientProps) 
     setXGRange,
     setMinProbability,
     setSearchQuery,
+    setShowAllMatches,
     leagues,
     filteredMatches,
     matchCountsByDate,
+    otherMatchesCount,
   } = useFixtureFilters(normalizedMatches);
 
   // TODO: Fetch favorites server-side and pass as props
@@ -118,6 +123,29 @@ export function HomeFixturesClient({ initialMatches }: HomeFixturesClientProps) 
         matches={matchesWithState}
         onMatchClick={handleMatchClick}
       />
+
+      {/* Bouton pour afficher tous les matchs */}
+      {otherMatchesCount > 0 && (
+        <div className="px-4 py-6">
+          <Button
+            variant="outline"
+            className="w-full py-6 text-base font-medium"
+            onClick={() => setShowAllMatches(!showAllMatches)}
+          >
+            {showAllMatches ? (
+              <>
+                <ChevronUp className="mr-2 h-5 w-5" />
+                Afficher moins de matchs
+              </>
+            ) : (
+              <>
+                <ChevronDown className="mr-2 h-5 w-5" />
+                Voir tous les matchs ({otherMatchesCount} autres)
+              </>
+            )}
+          </Button>
+        </div>
+      )}
     </>
   );
 }

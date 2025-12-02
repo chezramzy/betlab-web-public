@@ -300,7 +300,7 @@ const combinedPredictionsTable = `
     .map(pred => (
       <div
         key={pred.id}
-        className="flex items-center justify-between p-4 border rounded hover:bg-gray-50 dark:hover:bg-gray-900"
+        className="flex items-center justify-between p-4 border rounded hover:bg-gray-50"
       >
         <div className="flex-1">
           <p className="font-semibold">{pred.match}</p>

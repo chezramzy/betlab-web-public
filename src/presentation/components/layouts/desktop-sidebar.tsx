@@ -1,11 +1,10 @@
 'use client'
 
 import * as React from 'react'
-import { Home, Calendar, Star, User, LogOut, ChevronLeft, ChevronRight, Sun, Moon } from 'lucide-react'
+import { Home, Calendar, Star, User, LogOut, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/shared/utils'
 import { Button } from '@/presentation/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/presentation/components/ui/avatar'
-import { useTheme } from 'next-themes'
 import {
   Tooltip,
   TooltipContent,
@@ -70,17 +69,6 @@ export function DesktopSidebar({
   onLogout,
   className,
 }: DesktopSidebarProps) {
-  const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = React.useState(false)
-
-  React.useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark')
-  }
-
   const getInitials = (name?: string) => {
     if (!name) return 'U'
     return name
@@ -217,37 +205,6 @@ export function DesktopSidebar({
 
         {/* Bottom section - User profile & actions */}
         <div className="border-t border-border p-4 space-y-2">
-          {/* Theme toggle */}
-          {mounted && (
-            <Tooltip delayDuration={0}>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size={collapsed ? 'icon' : 'default'}
-                  onClick={toggleTheme}
-                  className={cn('w-full', !collapsed && 'justify-start')}
-                  aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-                >
-                  {theme === 'dark' ? (
-                    <Sun className="h-5 w-5" />
-                  ) : (
-                    <Moon className="h-5 w-5" />
-                  )}
-                  {!collapsed && (
-                    <span className="ml-3">
-                      {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
-                    </span>
-                  )}
-                </Button>
-              </TooltipTrigger>
-              {collapsed && (
-                <TooltipContent side="right" className="font-medium">
-                  {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
-                </TooltipContent>
-              )}
-            </Tooltip>
-          )}
-
           {/* User profile */}
           {user && (
             <div

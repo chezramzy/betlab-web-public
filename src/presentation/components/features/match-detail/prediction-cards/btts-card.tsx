@@ -9,9 +9,9 @@ interface BTTSCardProps {
 }
 
 const confidenceVariants = {
-  high: { className: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200", label: "Confiance élevée" },
-  medium: { className: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200", label: "Confiance moyenne" },
-  low: { className: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200", label: "Confiance faible" },
+  high: { className: "bg-green-100 text-green-800", label: "Confiance élevée" },
+  medium: { className: "bg-yellow-100 text-yellow-800", label: "Confiance moyenne" },
+  low: { className: "bg-red-100 text-red-800", label: "Confiance faible" },
 }
 
 /**
@@ -58,7 +58,7 @@ export function BTTSCard({ match }: BTTSCardProps) {
       <div className="p-4 border-b">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Target className="w-5 h-5 text-[var(--navy)] dark:text-[var(--lime)]" />
+            <Target className="w-5 h-5 text-[var(--navy)]" />
             <h3 className="text-lg font-semibold">Les 2 équipes marquent</h3>
           </div>
           <span className={cn("px-3 py-1 rounded-full text-xs font-medium", confidenceConfig.className)}>
@@ -124,9 +124,9 @@ export function BTTSCard({ match }: BTTSCardProps) {
 
         {/* Recommendation */}
         <div className="pt-4 border-t">
-          <div className="flex items-center justify-between p-3 bg-[var(--lime)]/10 dark:bg-[var(--lime)]/5 rounded-lg">
+          <div className="flex items-center justify-between p-3 bg-[var(--lime)]/10 rounded-lg">
             <span className="text-sm font-medium">Meilleur pari</span>
-            <span className="text-sm font-bold text-[var(--navy)] dark:text-[var(--lime)]">
+            <span className="text-sm font-bold text-[var(--navy)]">
               BTTS {bestChoice ? "Oui" : "Non"}
             </span>
           </div>

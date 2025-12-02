@@ -52,7 +52,7 @@ export function HtFtCard({ match, data }: HtFtCardProps) {
     <div className="overflow-hidden border rounded-lg bg-card">
       <div className="p-4 border-b flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <BadgePercent className="w-5 h-5 text-[var(--navy)] dark:text-[var(--lime)]" />
+          <BadgePercent className="w-5 h-5 text-[var(--navy)]" />
           <h3 className="text-lg font-semibold">Mi-temps / Temps plein</h3>
         </div>
         <span className="text-xs text-muted-foreground">Modèle {data.model_version}</span>
@@ -67,7 +67,7 @@ export function HtFtCard({ match, data }: HtFtCardProps) {
               return (
                 <div
                   key={outcome}
-                  className="p-3 rounded-lg border bg-background/60 dark:bg-background/40"
+                  className="p-3 rounded-lg border bg-background/60"
                 >
                   <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
                     <span>{outcomeLabels[outcome]}</span>
@@ -108,7 +108,7 @@ export function HtFtCard({ match, data }: HtFtCardProps) {
                         <td key={ftState.id} className="py-3 pr-4">
                           <div
                             className={cn(
-                              "p-3 rounded-lg border bg-background/80 dark:bg-background/40",
+                              "p-3 rounded-lg border bg-background/80",
                               outcome === topOutcomeId && "border-[var(--lime)]"
                             )}
                           >

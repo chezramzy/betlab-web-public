@@ -123,17 +123,17 @@ export function ValueBetsTab({ match, predictions }: ValueBetsTabProps) {
     <div className="p-4 space-y-6">
       {/* Summary Cards */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="bg-green-50 dark:bg-green-900/20 border-2 border-green-500 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-green-700 dark:text-green-300">{strongBets.length}</div>
-          <div className="text-xs text-green-600 dark:text-green-400 font-medium">Paris recommandés</div>
+        <div className="bg-green-50 border-2 border-green-500 rounded-lg p-4 text-center">
+          <div className="text-2xl font-bold text-green-700">{strongBets.length}</div>
+          <div className="text-xs text-green-600 font-medium">Paris recommandés</div>
         </div>
-        <div className="bg-yellow-50 dark:bg-yellow-900/20 border-2 border-yellow-500 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-yellow-700 dark:text-yellow-300">{moderateBets.length}</div>
-          <div className="text-xs text-yellow-600 dark:text-yellow-400 font-medium">Paris modérés</div>
+        <div className="bg-yellow-50 border-2 border-yellow-500 rounded-lg p-4 text-center">
+          <div className="text-2xl font-bold text-yellow-700">{moderateBets.length}</div>
+          <div className="text-xs text-yellow-600 font-medium">Paris modérés</div>
         </div>
-        <div className="bg-red-50 dark:bg-red-900/20 border-2 border-red-500 rounded-lg p-4 text-center">
-          <div className="text-2xl font-bold text-red-700 dark:text-red-300">{avoidBets.length}</div>
-          <div className="text-xs text-red-600 dark:text-red-400 font-medium">Paris à éviter</div>
+        <div className="bg-red-50 border-2 border-red-500 rounded-lg p-4 text-center">
+          <div className="text-2xl font-bold text-red-700">{avoidBets.length}</div>
+          <div className="text-xs text-red-600 font-medium">Paris à éviter</div>
         </div>
       </div>
 
@@ -141,7 +141,7 @@ export function ValueBetsTab({ match, predictions }: ValueBetsTabProps) {
       {strongBets.length > 0 && (
         <div className="bg-card border rounded-lg p-4">
           <div className="flex items-center gap-2 mb-4">
-            <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
+            <CheckCircle className="w-5 h-5 text-green-600" />
             <h3 className="text-lg font-semibold">Paris fortement recommandés (Edge {">"}5%)</h3>
           </div>
           <div className="space-y-2">
@@ -156,7 +156,7 @@ export function ValueBetsTab({ match, predictions }: ValueBetsTabProps) {
       {moderateBets.length > 0 && (
         <div className="bg-card border rounded-lg p-4">
           <div className="flex items-center gap-2 mb-4">
-            <AlertCircle className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
+            <AlertCircle className="w-5 h-5 text-yellow-600" />
             <h3 className="text-lg font-semibold">Paris modérés (Edge 2-5%)</h3>
           </div>
           <div className="space-y-2">
@@ -171,7 +171,7 @@ export function ValueBetsTab({ match, predictions }: ValueBetsTabProps) {
       {avoidBets.length > 0 && (
         <div className="bg-card border rounded-lg p-4">
           <div className="flex items-center gap-2 mb-4">
-            <XCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
+            <XCircle className="w-5 h-5 text-red-600" />
             <h3 className="text-lg font-semibold">Paris à éviter (Edge négatif)</h3>
           </div>
           <div className="space-y-2">
@@ -205,18 +205,18 @@ function ValueBetCard({ bet }: { bet: ValueBet }) {
     <div
       className={cn(
         "p-4 rounded-lg border-2 transition-all",
-        bet.recommendation === "strong" ? "border-green-500 bg-green-50 dark:bg-green-900/10" :
-        bet.recommendation === "moderate" ? "border-yellow-500 bg-yellow-50 dark:bg-yellow-900/10" :
-        "border-red-500 bg-red-50 dark:bg-red-900/10"
+        bet.recommendation === "strong" ? "border-green-500 bg-green-50" :
+        bet.recommendation === "moderate" ? "border-yellow-500 bg-yellow-50" :
+        "border-red-500 bg-red-50"
       )}
     >
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
             {isPositive ? (
-              <TrendingUp className="w-4 h-4 text-green-600 dark:text-green-400" />
+              <TrendingUp className="w-4 h-4 text-green-600" />
             ) : (
-              <TrendingDown className="w-4 h-4 text-red-600 dark:text-red-400" />
+              <TrendingDown className="w-4 h-4 text-red-600" />
             )}
             <span className="font-semibold">{bet.label}</span>
           </div>
@@ -238,8 +238,8 @@ function ValueBetCard({ bet }: { bet: ValueBet }) {
         <div className={cn(
           "ml-4 px-3 py-1 rounded-full text-sm font-bold",
           isPositive
-            ? "bg-green-600 dark:bg-green-500 text-white"
-            : "bg-red-600 dark:bg-red-500 text-white"
+            ? "bg-green-600 text-white"
+            : "bg-red-600 text-white"
         )}>
           {isPositive ? "+" : ""}{edgePercent.toFixed(1)}%
         </div>

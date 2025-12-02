@@ -55,8 +55,8 @@ export default function ForgotPasswordPage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-[calc(1.5rem+env(safe-area-inset-top))]">
         <div className="w-full max-w-md space-y-8 text-center">
-          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/20">
-            <CheckCircle className="h-12 w-12 text-green-600 dark:text-green-500" />
+          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
+            <CheckCircle className="h-12 w-12 text-green-600" />
           </div>
 
           <div className="space-y-2">

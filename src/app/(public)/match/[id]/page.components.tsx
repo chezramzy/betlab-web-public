@@ -87,7 +87,7 @@ export function ErrorState({ message }: ErrorStateProps) {
       <div className="max-w-md w-full text-center space-y-6">
         {/* Error icon */}
         <div className="flex justify-center">
-          <div className="w-16 h-16 bg-red-100 dark:bg-red-950 rounded-full flex items-center justify-center">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
             <AlertCircle className="w-8 h-8 text-red-500" />
           </div>
         </div>
@@ -101,7 +101,7 @@ export function ErrorState({ message }: ErrorStateProps) {
         {/* Retry button - requires page reload in server component context */}
         <button
           onClick={() => window.location.reload()}
-          className="w-full min-h-[44px] px-6 py-3 bg-navy dark:bg-lime text-white dark:text-navy rounded-lg font-medium flex items-center justify-center gap-2 active:scale-95 transition-transform"
+          className="w-full min-h-[44px] px-6 py-3 bg-navy text-white rounded-lg font-medium flex items-center justify-center gap-2 active:scale-95 transition-transform"
         >
           <RefreshCw className="w-4 h-4" />
           Réessayer

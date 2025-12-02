@@ -139,15 +139,17 @@ const MatchCardCompact = React.forwardRef<HTMLDivElement, MatchCardCompactProps>
 
         {/* Header: League */}
         <div className="flex items-center gap-2 min-w-0 mb-3">
-          <Image
-            src={match.league.logo}
-            alt=""
-            width={16}
-            height={16}
-            className="shrink-0"
-            loading="lazy"
-            quality={75}
-          />
+          <div className="w-4 h-4 shrink-0 relative">
+            <Image
+              src={match.league.logo}
+              alt=""
+              fill
+              sizes="16px"
+              className="object-contain"
+              loading="lazy"
+              quality={75}
+            />
+          </div>
           <span className="text-xs text-muted-foreground truncate">
             {match.league.name}
           </span>
@@ -157,17 +159,19 @@ const MatchCardCompact = React.forwardRef<HTMLDivElement, MatchCardCompactProps>
         <div className="flex items-start justify-between gap-4 mb-3">
           {/* Home Team */}
           <div className="flex flex-col items-center flex-1 min-w-0">
-            <Image
-              src={match.homeTeam.logo}
-              alt={match.homeTeam.name}
-              width={40}
-              height={40}
-              className="shrink-0 rounded-full shadow-sm"
-              loading="lazy"
-              quality={75}
-              placeholder="blur"
-              blurDataURL={TEAM_LOGO_BLUR}
-            />
+            <div className="w-10 h-10 shrink-0 relative">
+              <Image
+                src={match.homeTeam.logo}
+                alt={match.homeTeam.name}
+                fill
+                sizes="40px"
+                className="object-contain rounded-full"
+                loading="lazy"
+                quality={75}
+                placeholder="blur"
+                blurDataURL={TEAM_LOGO_BLUR}
+              />
+            </div>
             <span className="text-sm font-bold text-center truncate mt-1.5 w-full px-1">
               {match.homeTeam.name}
             </span>
@@ -208,17 +212,19 @@ const MatchCardCompact = React.forwardRef<HTMLDivElement, MatchCardCompactProps>
 
           {/* Away Team */}
           <div className="flex flex-col items-center flex-1 min-w-0">
-            <Image
-              src={match.awayTeam.logo}
-              alt={match.awayTeam.name}
-              width={40}
-              height={40}
-              className="shrink-0 rounded-full shadow-sm"
-              loading="lazy"
-              quality={75}
-              placeholder="blur"
-              blurDataURL={TEAM_LOGO_BLUR}
-            />
+            <div className="w-10 h-10 shrink-0 relative">
+              <Image
+                src={match.awayTeam.logo}
+                alt={match.awayTeam.name}
+                fill
+                sizes="40px"
+                className="object-contain rounded-full"
+                loading="lazy"
+                quality={75}
+                placeholder="blur"
+                blurDataURL={TEAM_LOGO_BLUR}
+              />
+            </div>
             <span className="text-sm font-bold text-center truncate mt-1.5 w-full px-1">
               {match.awayTeam.name}
             </span>

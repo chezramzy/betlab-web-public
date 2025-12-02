@@ -73,8 +73,8 @@ export function PredictionsTab({ match, predictions }: PredictionsTabProps) {
                   "transition-all duration-200",
                   // Active state
                   isActive
-                    ? "bg-[var(--navy)] dark:bg-[var(--lime)] text-white dark:text-[var(--navy)] shadow-md scale-105"
-                    : "bg-gray-100 dark:bg-gray-800 text-muted-foreground hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer"
+                    ? "bg-[var(--navy)] text-white shadow-md scale-105"
+                    : "bg-gray-100 text-muted-foreground hover:bg-gray-200 cursor-pointer"
                 )}
               >
                 {type.shortLabel}

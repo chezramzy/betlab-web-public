@@ -32,23 +32,45 @@ export type PredictionType =
   | "corners";
 export type ConfidenceLevel = "low" | "medium" | "high";
 
-// Popular league IDs (same as Flutter app and api-config)
-const POPULAR_LEAGUE_IDS = new Set([
+// Popular league IDs - Ligues majeures du football mondial
+// Ces ligues sont affichées par défaut sur la page d'accueil
+export const POPULAR_LEAGUE_IDS = new Set([
+  // Angleterre
   39, // Premier League
+  40, // Championship (2ème division)
+  // Espagne
   140, // La Liga
+  // France
   61, // Ligue 1
+  // Allemagne
   78, // Bundesliga
+  79, // 2. Bundesliga
+  // Italie
   135, // Serie A
+  // Compétitions UEFA
   2, // UEFA Champions League
   3, // UEFA Europa League
   848, // UEFA Conference League
-  94, // Primeira Liga
-  88, // Eredivisie
-  203, // Super Lig
-  71, // Serie A Brazil
-  128, // Liga MX
-  253, // MLS
+  // Autres ligues européennes majeures
+  94, // Primeira Liga (Portugal)
+  88, // Eredivisie (Netherlands)
+  203, // Süper Lig (Turkey)
+  // Coupes nationales majeures
+  81, // DFB Pokal (Germany)
+  137, // Coppa Italia (Italy)
+  143, // Copa del Rey (Spain)
+  // Amérique
+  71, // Serie A (Brazil)
+  128, // Liga MX (Mexico)
+  253, // MLS (USA)
 ]);
+
+/**
+ * Vérifie si un match appartient à une ligue populaire
+ */
+export function isPopularLeague(leagueId: number): boolean {
+  return POPULAR_LEAGUE_IDS.has(leagueId);
+}
 
 /**
  * Clean league name by removing group/girone suffixes
@@ -74,13 +96,16 @@ export function useFixtureFilters(matches: Match[]) {
   // Filter state
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedLeagueId, setSelectedLeagueId] = useState<number | string | "all" | "favorites">(
-    "all"  // Changed from "favorites" to show all matches with predictions
+    "all"
   );
   const [selectedPredictionType, setSelectedPredictionType] = useState<PredictionType>("internal");
   const [selectedConfidences, setSelectedConfidences] = useState<ConfidenceLevel[]>([]);
   const [xGRange, setXGRange] = useState<[number, number]>([0, 5]);
   const [minProbability, setMinProbability] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Par défaut, afficher uniquement les matchs des ligues populaires
+  const [showAllMatches, setShowAllMatches] = useState(false);
 
   // Extract unique leagues from matches (grouped by cleaned name)
   const leagues = useMemo((): LeagueInfo[] => {
@@ -118,9 +143,26 @@ export function useFixtureFilters(matches: Match[]) {
       .sort((a, b) => b.matchCount - a.matchCount);
   }, [matches]);
 
+  // Séparer les matchs populaires des non-populaires
+  const { popularMatches, otherMatches } = useMemo(() => {
+    const popular: Match[] = [];
+    const other: Match[] = [];
+
+    matches.forEach((match) => {
+      if (POPULAR_LEAGUE_IDS.has(match.league.id)) {
+        popular.push(match);
+      } else {
+        other.push(match);
+      }
+    });
+
+    return { popularMatches: popular, otherMatches: other };
+  }, [matches]);
+
   // Filter matches based on current filter state
   const filteredMatches = useMemo(() => {
-    let filtered = [...matches];
+    // Choisir la base de matchs selon showAllMatches
+    let filtered = showAllMatches ? [...matches] : [...popularMatches];
 
     // Filter by search query
     if (searchQuery.trim()) {
@@ -134,7 +176,7 @@ export function useFixtureFilters(matches: Match[]) {
       );
     }
 
-    // Filter by league
+    // Filter by league (uniquement si showAllMatches ou si une ligue spécifique est sélectionnée)
     if (selectedLeagueId === "favorites") {
       // Show only popular leagues
       filtered = filtered.filter((m) => POPULAR_LEAGUE_IDS.has(m.league.id));
@@ -154,7 +196,7 @@ export function useFixtureFilters(matches: Match[]) {
     // TODO: Add more filters (confidence, xG, probability) when predictions are integrated
 
     return filtered;
-  }, [matches, selectedLeagueId, leagues, searchQuery]);
+  }, [matches, popularMatches, selectedLeagueId, leagues, searchQuery, showAllMatches]);
 
   // Count matches by date (for CalendarWidget)
   // Note: Currently only has data for the fetched date
@@ -178,6 +220,7 @@ export function useFixtureFilters(matches: Match[]) {
     xGRange,
     minProbability,
     searchQuery,
+    showAllMatches,
 
     // Setters
     setSelectedDate,
@@ -188,10 +231,13 @@ export function useFixtureFilters(matches: Match[]) {
     setXGRange,
     setMinProbability,
     setSearchQuery,
+    setShowAllMatches,
 
     // Computed values
     leagues,
     filteredMatches,
     matchCountsByDate,
+    otherMatchesCount: otherMatches.length,
+    popularMatchesCount: popularMatches.length,
   };
 }

@@ -43,7 +43,7 @@ const liveBadgeVariants = cva(
       variant: {
         solid: "bg-[var(--live)] text-white shadow-sm",
         outline: "bg-transparent border-2 border-[var(--live)] text-[var(--live)]",
-        ghost: "bg-[var(--live)]/10 text-[var(--live)] dark:bg-[var(--live)]/20",
+        ghost: "bg-[var(--live)]/10 text-[var(--live)]",
       },
       animated: {
         true: "",
@@ -54,7 +54,7 @@ const liveBadgeVariants = cva(
         false: "",
       },
       showGlow: {
-        true: "shadow-[0_0_10px_rgba(220,38,38,0.5)] dark:shadow-[0_0_15px_rgba(220,38,38,0.6)]",
+        true: "shadow-[0_0_10px_rgba(220,38,38,0.5)]",
         false: "",
       },
     },

@@ -48,14 +48,14 @@ export function MatchHeader({ match }: MatchHeaderProps) {
               "w-11 h-11 rounded-full",
               "transition-colors duration-200",
               "active:scale-95",
-              "bg-gray-100 dark:bg-gray-800"
+              "bg-gray-100"
             )}
             aria-label="Ajouter aux favoris"
           >
             <Heart
               className={cn(
                 "w-5 h-5 transition-colors",
-                "text-gray-500 dark:text-gray-400"
+                "text-gray-500"
               )}
             />
           </button>

@@ -19,17 +19,17 @@ const confidenceConfig = {
   high: {
     label: "Haute confiance",
     shortLabel: "Haute",
-    className: "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20"
+    className: "bg-green-500/10 text-green-600 border-green-500/20"
   },
   medium: {
     label: "Confiance moyenne",
     shortLabel: "Moyenne",
-    className: "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20"
+    className: "bg-yellow-500/10 text-yellow-600 border-yellow-500/20"
   },
   low: {
     label: "Faible confiance",
     shortLabel: "Faible",
-    className: "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20"
+    className: "bg-red-500/10 text-red-600 border-red-500/20"
   }
 }
 
