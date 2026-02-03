@@ -99,14 +99,14 @@ export function DesktopSidebar({
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
           'group relative',
           isActive
-            ? 'bg-[hsl(var(--navy))]/10 text-[hsl(var(--navy))] font-medium'
+            ? 'bg-primary/10 text-primary font-medium'
             : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
           collapsed && 'justify-center px-2'
         )}
         aria-label={item.ariaLabel}
         aria-current={isActive ? 'page' : undefined}
       >
-        <Icon className={cn('h-5 w-5 shrink-0', isActive && 'text-[hsl(var(--navy))]')} />
+        <Icon className={cn('h-5 w-5 shrink-0', isActive && 'text-primary')} />
 
         {!collapsed && (
           <span className="transition-opacity duration-200 opacity-100">
@@ -118,7 +118,7 @@ export function DesktopSidebar({
           <span
             className={cn(
               'absolute left-0 top-1/2 -translate-y-1/2',
-              'w-1 h-8 bg-[hsl(var(--navy))] rounded-r-full',
+              'w-1 h-8 bg-primary rounded-r-full',
               'transition-all duration-200'
             )}
             aria-hidden="true"
@@ -165,7 +165,7 @@ export function DesktopSidebar({
           {!collapsed ? (
             <>
               <div className="flex items-center gap-2">
-                <div className="h-10 w-10 rounded-lg bg-[hsl(var(--navy))] flex items-center justify-center shrink-0">
+                <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center shrink-0">
                   <span className="text-white font-bold text-lg">BL</span>
                 </div>
                 <span className="text-xl font-bold text-foreground">BetLab</span>
@@ -184,7 +184,7 @@ export function DesktopSidebar({
             </>
           ) : (
             <div className="flex flex-col items-center gap-2">
-              <div className="h-10 w-10 rounded-lg bg-[hsl(var(--navy))] flex items-center justify-center">
+              <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center">
                 <span className="text-white font-bold text-lg">BL</span>
               </div>
               {onToggleCollapse && (
