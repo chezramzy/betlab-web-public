@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Home, Calendar, Star, User, LogOut, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Home, Calendar, Star, User, LogOut, ChevronLeft, ChevronRight, Zap } from 'lucide-react'
 import { cn } from '@/shared/utils'
 import { Button } from '@/presentation/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/presentation/components/ui/avatar'
@@ -13,8 +13,8 @@ import {
 } from '@/presentation/components/ui/tooltip'
 
 export interface DesktopSidebarProps {
-  activeTab: 'home' | 'matches' | 'favorites' | 'settings'
-  onTabChange: (tab: 'home' | 'matches' | 'favorites' | 'settings') => void
+  activeTab: 'home' | 'virtual' | 'matches' | 'favorites' | 'settings'
+  onTabChange: (tab: 'home' | 'virtual' | 'matches' | 'favorites' | 'settings') => void
   collapsed?: boolean
   onToggleCollapse?: () => void
   user?: {
@@ -27,7 +27,7 @@ export interface DesktopSidebarProps {
 }
 
 interface NavItem {
-  id: 'home' | 'matches' | 'favorites' | 'settings'
+  id: 'home' | 'virtual' | 'matches' | 'favorites' | 'settings'
   label: string
   icon: React.ComponentType<{ className?: string }>
   ariaLabel: string
@@ -39,6 +39,12 @@ const navItems: NavItem[] = [
     label: 'Home',
     icon: Home,
     ariaLabel: 'Navigate to home',
+  },
+  {
+    id: 'virtual',
+    label: 'Virtual',
+    icon: Zap,
+    ariaLabel: 'Virtual Match Builder',
   },
   {
     id: 'matches',

@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { DesktopSidebar, MobileBottomNav, MobileHeader } from "@/presentation/components/layouts";
 import type { CurrentUser } from "@/core/entities/user.entity";
 
-type NavTab = "home" | "matches" | "favorites" | "settings";
+type NavTab = "home" | "virtual" | "matches" | "favorites" | "settings";
 
 interface PublicShellProps {
   children: ReactNode;
@@ -18,6 +18,7 @@ export function PublicShell({ children, user }: PublicShellProps) {
 
   const getActiveTab = (): NavTab => {
     if (pathname === "/") return "home";
+    if (pathname.startsWith("/virtual-match")) return "virtual";
     if (pathname.startsWith("/matches")) return "matches";
     if (pathname.startsWith("/favorites")) return "favorites";
     if (pathname.startsWith("/settings")) return "settings";
@@ -28,6 +29,9 @@ export function PublicShell({ children, user }: PublicShellProps) {
     switch (tab) {
       case "home":
         router.push("/");
+        break;
+      case "virtual":
+        router.push("/virtual-match");
         break;
       case "matches":
         router.push("/matches");
@@ -50,10 +54,10 @@ export function PublicShell({ children, user }: PublicShellProps) {
         user={
           user
             ? {
-                name: user.email || "User",
-                email: user.email || "",
-                avatar: undefined,
-              }
+              name: user.email || "User",
+              email: user.email || "",
+              avatar: undefined,
+            }
             : undefined
         }
       />

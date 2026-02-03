@@ -69,9 +69,9 @@ function transformMatchDetail(response: ApiFixtureResponse): MatchDetail {
     status: mappedStatus,
     score: response.goals
       ? {
-          home: response.goals.home ?? 0,
-          away: response.goals.away ?? 0,
-        }
+        home: response.goals.home ?? 0,
+        away: response.goals.away ?? 0,
+      }
       : undefined,
     venue: response.venue,
   };
@@ -85,7 +85,7 @@ const fetchMatch = cache(async (fixtureId: number): Promise<MatchDetail> => {
 const DEFAULT_PREDICTION_TYPE: PredictionType = "match_result";
 
 export class BetlabMatchDetailRepository implements IMatchDetailRepository {
-  constructor(private readonly predictionRepository: IPredictionRepository) {}
+  constructor(private readonly predictionRepository: IPredictionRepository) { }
 
   async getMatchDetail(fixtureId: number | string): Promise<MatchDetail> {
     const id = typeof fixtureId === "string" ? parseInt(fixtureId, 10) : fixtureId;
@@ -106,14 +106,24 @@ export class BetlabMatchDetailRepository implements IMatchDetailRepository {
   }
 
   private async attachPredictions(detail: MatchDetail, fixtureId: number) {
+    const types: PredictionType[] = [
+      "match_result",
+      "asian_handicap",
+      "asian_totals",
+      "exact_goals",
+    ];
+
     try {
-      const prediction = await this.predictionRepository.getPrediction(
-        fixtureId,
-        DEFAULT_PREDICTION_TYPE
+      const results = await Promise.allSettled(
+        types.map((type) => this.predictionRepository.getPrediction(fixtureId, type))
       );
-      if (prediction) {
-        detail.predictions = [prediction];
-      }
+
+      detail.predictions = results
+        .filter(
+          (result): result is PromiseFulfilledResult<PredictionData> =>
+            result.status === "fulfilled" && Boolean(result.value)
+        )
+        .map((result) => result.value);
     } catch (error) {
       console.warn(`Failed to fetch predictions for match ${fixtureId}:`, error);
     }

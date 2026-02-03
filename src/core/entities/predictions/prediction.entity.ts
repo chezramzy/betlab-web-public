@@ -13,6 +13,8 @@ export type PredictionType =
   | "double_chance"
   | "draw_no_bet"
   | "asian_handicap"
+  | "asian_totals"
+  | "exact_goals"
   | "half_time"
   | "corners"
   | "first_goal";
@@ -52,6 +54,11 @@ export interface MatchResultPrediction {
       fatigueFactors: { home: number; away: number };
       travelDistance?: number;
     };
+    opportunities?: Array<{
+      type: string;
+      label: string;
+      prob: number;
+    }>;
   };
 }
 
@@ -99,15 +106,38 @@ export interface DrawNoBetPrediction {
 export interface AsianHandicapPrediction {
   fixtureId: number;
   type: "asian_handicap";
-  homeMinusQuarter: {
-    winFull: number;
-    halfLoss: number;
-    loss: number;
-    odds: number;
-    bookmakerOdds?: number;
-    edge?: number;
-    thresholds?: ProbabilityThresholds;
-  };
+  lines: Array<{
+    line: number;
+    home: number;
+    away: number;
+    push: number;
+  }>;
+  confidence: ConfidenceLevel;
+}
+
+export interface AsianTotalsPrediction {
+  fixtureId: number;
+  type: "asian_totals";
+  lines: Array<{
+    line: number;
+    over: number;
+    under: number;
+    push: number;
+  }>;
+  confidence: ConfidenceLevel;
+}
+
+export interface ExactGoalsPrediction {
+  fixtureId: number;
+  type: "exact_goals";
+  distribution: Array<{
+    goals: string;
+    probability: number;
+  }>;
+  brackets: Array<{
+    bracket: string;
+    probability: number;
+  }>;
   confidence: ConfidenceLevel;
 }
 
@@ -127,6 +157,8 @@ export type PredictionData =
   | CorrectScorePrediction
   | DrawNoBetPrediction
   | AsianHandicapPrediction
+  | AsianTotalsPrediction
+  | ExactGoalsPrediction
   | DoubleChancePrediction;
 
 export interface PredictionWithUI {

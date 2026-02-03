@@ -1,12 +1,12 @@
 'use client'
 
 import * as React from 'react'
-import { Home, Calendar, Star, User } from 'lucide-react'
+import { Home, Calendar, Star, User, Zap } from 'lucide-react'
 import { cn } from '@/shared/utils'
 
 export interface MobileBottomNavProps {
-  activeTab: 'home' | 'matches' | 'favorites' | 'settings'
-  onTabChange: (tab: 'home' | 'matches' | 'favorites' | 'settings') => void
+  activeTab: 'home' | 'virtual' | 'matches' | 'favorites' | 'settings'
+  onTabChange: (tab: 'home' | 'virtual' | 'matches' | 'favorites' | 'settings') => void
   notifications?: {
     matches?: number
     favorites?: number
@@ -15,7 +15,7 @@ export interface MobileBottomNavProps {
 }
 
 interface NavItem {
-  id: 'home' | 'matches' | 'favorites' | 'settings'
+  id: 'home' | 'virtual' | 'matches' | 'favorites' | 'settings'
   label: string
   icon: React.ComponentType<{ className?: string }>
   ariaLabel: string
@@ -27,6 +27,12 @@ const navItems: NavItem[] = [
     label: 'Home',
     icon: Home,
     ariaLabel: 'Navigate to home',
+  },
+  {
+    id: 'virtual',
+    label: 'Virtual',
+    icon: Zap,
+    ariaLabel: 'Virtual Match Builder',
   },
   {
     id: 'matches',
@@ -106,7 +112,7 @@ export function MobileBottomNav({
             <button
               key={item.id}
               onClick={() => handleTabClick(item.id)}
-              onKeyDown={(e) => handleKeyDown(e, item.id)}
+              onKeyDown={(e: React.KeyboardEvent) => handleKeyDown(e, item.id)}
               className={cn(
                 'relative flex flex-col items-center justify-center',
                 'w-16 h-16',

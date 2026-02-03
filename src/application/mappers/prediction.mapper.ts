@@ -11,6 +11,8 @@ import type {
   CorrectScorePrediction,
   DrawNoBetPrediction,
   AsianHandicapPrediction,
+  AsianTotalsPrediction,
+  ExactGoalsPrediction,
   DoubleChancePrediction,
   PredictionData,
 } from "@/core/entities/predictions/prediction.entity";
@@ -62,6 +64,11 @@ export interface API1X2Response {
     draw: number
     away: number
   }
+  opportunities?: Array<{
+    type: string
+    label: string
+    prob: number
+  }>
 }
 
 export interface APIMarketsResponse {
@@ -120,7 +127,38 @@ export interface APIMarketsResponse {
       prob: number
       fair_odds: number
     }>
+    handicap_simple?: Array<{
+      line: number
+      home: number
+      draw: number
+      away: number
+    }>
+    handicap_asian?: Array<{
+      line: number
+      home: number
+      away: number
+      push: number
+    }>
+    totals_asian?: Array<{
+      line: number
+      over: number
+      under: number
+      push: number
+    }>
+    exact_goals?: Array<{
+      goals: string
+      probability: number
+    }>
+    goal_brackets?: Array<{
+      bracket: string
+      probability: number
+    }>
   }
+  opportunities?: Array<{
+    type: string
+    label: string
+    prob: number
+  }>
   recommendations: GenericRecommendation[]
   meta: {
     risk_profile: string
@@ -225,11 +263,10 @@ export function transform1X2ToPrediction(
       away: response.inputs.mu_away_recent
     } : undefined,
     confidence: calculateConfidence(maxProb),
-    reasoning: `Basé sur le modèle ${response.model_version}. ${
-      response.inputs.rating_home && response.inputs.rating_away
-        ? `Ratings: ${Math.round(response.inputs.rating_home)} vs ${Math.round(response.inputs.rating_away)}.`
-        : ""
-    }`,
+    reasoning: `Basé sur le modèle ${response.model_version}. ${response.inputs.rating_home && response.inputs.rating_away
+      ? `Ratings: ${Math.round(response.inputs.rating_home)} vs ${Math.round(response.inputs.rating_away)}.`
+      : ""
+      }`,
     analytics: {
       formIndex: response.inputs.form_index_home !== undefined && response.inputs.form_index_away !== undefined ? {
         home: response.inputs.form_index_home,
@@ -261,7 +298,8 @@ export function transform1X2ToPrediction(
           away: response.inputs.fatigue_factor_away ?? 1
         },
         travelDistance: response.inputs.travel_distance_km
-      } : undefined
+      } : undefined,
+      opportunities: response.opportunities
     }
   }
 }
@@ -419,27 +457,84 @@ export function transformMarketsToAsianHandicap(
   odds: APIOddsResponse | null,
   fixtureId: number
 ): AsianHandicapPrediction {
-  const ah = response.markets.ah_home_m025
+  const ah = response.markets.handicap_asian
 
   if (!ah) {
     throw new Error("Asian Handicap data not available in markets response")
   }
 
-  const edge = calculateEdge(ah.fair_odds, odds?.odds.ah_home_m025)
+  const maxWinProb = Math.max(...ah.map(l => l.home), ...ah.map(l => l.away))
 
   return {
     fixtureId,
     type: "asian_handicap",
-    homeMinusQuarter: {
-      winFull: ah.prob_win_full,
-      halfLoss: ah.prob_half_loss,
-      loss: ah.prob_loss,
-      odds: ah.fair_odds,
-      bookmakerOdds: odds?.odds.ah_home_m025,
-      edge,
-      thresholds: ah.thresholds
-    },
-    confidence: calculateConfidence(ah.prob_win_full)
+    lines: ah.map(l => ({
+      line: l.line,
+      home: l.home,
+      away: l.away,
+      push: l.push
+    })),
+    confidence: calculateConfidence(maxWinProb)
+  }
+}
+
+/**
+ * Transform Markets endpoint response to AsianTotalsPrediction
+ */
+export function transformMarketsToAsianTotals(
+  response: APIMarketsResponse,
+  odds: APIOddsResponse | null,
+  fixtureId: number
+): AsianTotalsPrediction {
+  const totals = response.markets.totals_asian
+
+  if (!totals) {
+    throw new Error("Asian Totals data not available in markets response")
+  }
+
+  const maxProb = Math.max(...totals.map(l => l.over), ...totals.map(l => l.under))
+
+  return {
+    fixtureId,
+    type: "asian_totals",
+    lines: totals.map(l => ({
+      line: l.line,
+      over: l.over,
+      under: l.under,
+      push: l.push
+    })),
+    confidence: calculateConfidence(maxProb)
+  }
+}
+
+/**
+ * Transform Markets endpoint response to ExactGoalsPrediction
+ */
+export function transformMarketsToExactGoals(
+  response: APIMarketsResponse,
+  fixtureId: number
+): ExactGoalsPrediction {
+  const exact = response.markets.exact_goals
+  const brackets = response.markets.goal_brackets
+
+  if (!exact || !brackets) {
+    throw new Error("Goals distribution data not available in markets response")
+  }
+
+  const maxProb = Math.max(...exact.map(l => l.probability))
+
+  return {
+    fixtureId,
+    type: "exact_goals",
+    distribution: exact.map(g => ({
+      goals: g.goals,
+      probability: g.probability
+    })),
+    brackets: brackets.map(b => ({
+      bracket: b.bracket,
+      probability: b.probability
+    })),
+    confidence: calculateConfidence(maxProb)
   }
 }
 
