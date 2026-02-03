@@ -94,7 +94,11 @@ function getMaxProbability(prediction: PredictionData): number {
     case "draw_no_bet":
       return Math.max(prediction.home.probability, prediction.away?.probability ?? 0);
     case "asian_handicap":
-      return prediction.homeMinusQuarter.winFull;
+      return Math.max(prediction.lines[0]?.home ?? 0, prediction.lines[0]?.away ?? 0);
+    case "asian_totals":
+      return Math.max(prediction.lines[0]?.over ?? 0, prediction.lines[0]?.under ?? 0);
+    case "exact_goals":
+      return Math.max(...prediction.distribution.map(d => d.probability));
     case "double_chance":
       return Math.max(
         prediction.homeOrDraw.probability,

@@ -13,6 +13,8 @@ import {
   transformMarketsToCorrectScore,
   transformMarketsToDrawNoBet,
   transformMarketsToAsianHandicap,
+  transformMarketsToAsianTotals,
+  transformMarketsToExactGoals,
   transformMarketsToDoubleChance,
   type API1X2Response,
   type APIMarketsResponse,
@@ -36,16 +38,16 @@ async function fetchPrediction(
     endpoint === "1x2"
       ? betlabFetch<API1X2Response>(`/v1/matches/${fixtureId}/probabilities/1x2`)
       : betlabFetch<
-          APIMarketsResponse,
-          { model: string; cap: number; include_scores_top: number }
-        >(`/v1/matches/${fixtureId}/probabilities/markets`, {
-          method: "POST",
-          body: {
-            model: "poisson",
-            cap: 10,
-            include_scores_top: 10,
-          },
-        }),
+        APIMarketsResponse,
+        { model: string; cap: number; include_scores_top: number }
+      >(`/v1/matches/${fixtureId}/probabilities/markets`, {
+        method: "POST",
+        body: {
+          model: "poisson",
+          cap: 10,
+          include_scores_top: 10,
+        },
+      }),
     betlabFetch<APIOddsResponse>(`/v1/matches/${fixtureId}/odds`),
   ]);
 
@@ -75,6 +77,10 @@ async function fetchPrediction(
       return transformMarketsToDrawNoBet(predictionData as APIMarketsResponse, odds, fixtureId);
     case "asian_handicap":
       return transformMarketsToAsianHandicap(predictionData as APIMarketsResponse, odds, fixtureId);
+    case "asian_totals":
+      return transformMarketsToAsianTotals(predictionData as APIMarketsResponse, odds, fixtureId);
+    case "exact_goals":
+      return transformMarketsToExactGoals(predictionData as APIMarketsResponse, fixtureId);
     case "double_chance":
       return transformMarketsToDoubleChance(predictionData as APIMarketsResponse, fixtureId);
     case "half_time":

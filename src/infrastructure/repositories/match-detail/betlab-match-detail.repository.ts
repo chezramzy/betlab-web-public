@@ -2,7 +2,7 @@ import "server-only";
 
 import { cache } from "react";
 import type { MatchDetail } from "@/core/entities/match-detail/match-detail.entity";
-import type { PredictionType } from "@/core/entities/predictions/prediction.entity";
+import type { PredictionData, PredictionType } from "@/core/entities/predictions/prediction.entity";
 import type { IMatchDetailRepository } from "@/core/repositories/match-detail.repository";
 import type { IPredictionRepository } from "@/core/repositories/prediction.repository";
 import { betlabFetch } from "@/infrastructure/services/betlab-api/client";

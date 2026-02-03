@@ -7,7 +7,7 @@ import { Toaster as SonnerToaster } from "@/presentation/components/ui/sonner";
 import { Toaster } from "@/presentation/components/ui/toast";
 import type { CurrentUser } from "@/core/entities/user.entity";
 
-type NavTab = "home" | "matches" | "favorites" | "settings";
+type NavTab = "home" | "matches" | "favorites" | "virtual" | "settings";
 
 interface PrivateShellProps {
   children: ReactNode;
@@ -22,6 +22,7 @@ export function PrivateShell({ children, user }: PrivateShellProps) {
     if (pathname === "/" || pathname === "/dashboard") return "home";
     if (pathname.startsWith("/matches")) return "matches";
     if (pathname.startsWith("/favorites")) return "favorites";
+    if (pathname.startsWith("/virtual")) return "virtual";
     if (pathname.startsWith("/settings")) return "settings";
     return "home";
   };
@@ -36,6 +37,9 @@ export function PrivateShell({ children, user }: PrivateShellProps) {
         break;
       case "favorites":
         router.push("/favorites");
+        break;
+      case "virtual":
+        router.push("/virtual-match");
         break;
       case "settings":
         router.push("/settings");
@@ -53,10 +57,10 @@ export function PrivateShell({ children, user }: PrivateShellProps) {
           user={
             user
               ? {
-                  name: user.email || "User",
-                  email: user.email || "",
-                  avatar: undefined,
-                }
+                name: user.email || "User",
+                email: user.email || "",
+                avatar: undefined,
+              }
               : undefined
           }
         />

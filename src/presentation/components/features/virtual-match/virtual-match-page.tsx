@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { TeamSearch } from "./team-search"
-import { Zap, Vs, Trophy, TrendingUp, Info, Loader2, Play } from "lucide-react"
+import { Zap, Swords, Trophy, TrendingUp, Info, Loader2, Play } from "lucide-react"
 import { cn } from "@/shared/utils"
 import { Button } from "@/presentation/components/ui/button"
 import { GoalsHeatmap } from "../match-detail/smart-analysis/goals-heatmap"
@@ -195,7 +195,7 @@ export default function VirtualMatchPage() {
             {/* Empty State / Instructional */}
             {!result && !loading && (
                 <div className="bg-muted/30 border border-dashed rounded-3xl p-12 text-center text-muted-foreground">
-                    <Vs className="h-12 w-12 mx-auto mb-4 opacity-20" />
+                    <Swords className="h-12 w-12 mx-auto mb-4 opacity-20" />
                     <p className="max-w-xs mx-auto">Choisissez deux équipes ci-dessus pour comparer leurs forces et générer des prédictions.</p>
                 </div>
             )}
