@@ -21,3 +21,6 @@ export { MatchCardSkeleton } from "./match-card-skeleton";
 export { PredictionDisplay } from "./prediction-display";
 export { TimeSlotSection } from "./time-slot-section";
 export { SubTimeSlotHeader } from "./sub-time-slot-header";
+
+// Prediction Validation
+export { PredictionValidationBadge } from "./prediction-validation-badge";

@@ -13,7 +13,7 @@
 import { useMemo, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { format } from "date-fns";
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { Check, Radio, Search, SlidersHorizontal, X } from "lucide-react";
 
 import {
   CalendarWidget,
@@ -23,6 +23,8 @@ import {
   MatchList,
 } from "@/presentation/components/features/fixtures";
 import { useFixtureFilters } from "@/presentation/hooks/fixtures/use-fixture-filters";
+import { useLiveScores } from "@/presentation/hooks/fixtures/use-live-scores";
+import { validatePrediction, validateBestMarket } from "./utils/prediction-validation";
 import type { MatchWithPrediction } from "@/core/entities/fixtures/fixture.entity";
 import { cn } from "@/shared/utils";
 
@@ -86,8 +88,72 @@ export function HomeFixturesClient({ initialMatches }: HomeFixturesClientProps) 
     router.push(`/?${params.toString()}`);
   };
 
+  // Live scores polling — merges live data into filtered matches
+  const { matches: liveMatches, isLive, lastUpdate } = useLiveScores(filteredMatches);
+
   const hasActiveFilters = selectedConfidences.length > 0 || minProbability > 0 || xGRange[0] > 0 || xGRange[1] < 5;
   const activeFilterCount = selectedConfidences.length + (minProbability > 0 ? 1 : 0) + (xGRange[0] > 0 || xGRange[1] < 5 ? 1 : 0);
+
+  // Extract raw best market label matching getBestMarket() paths
+  function extractRawBestMarketLabel(prediction: MatchWithPrediction["prediction"]): string | null {
+    if (!prediction) return null;
+    const anyPred = prediction as unknown as Record<string, unknown>;
+
+    // Path 1: direct best_market / bestMarket
+    const direct = (anyPred.best_market ?? anyPred.bestMarket) as { market?: string; label?: string; rule?: { label?: string } } | undefined;
+    if (direct) {
+      const raw = direct.market ?? direct.label ?? direct.rule?.label;
+      if (raw) return raw;
+    }
+
+    // Path 2: opportunities
+    if (prediction.type === "match_result") {
+      const opps = prediction.analytics?.opportunities ?? [];
+      if (opps.length > 0) {
+        const best = opps.reduce((acc, cur) => cur.prob > acc.prob ? cur : acc);
+        return best.label;
+      }
+      // Path 3: 1X2 fallback
+      const home = prediction.homeWin?.probability ?? 0;
+      const draw = prediction.draw?.probability ?? 0;
+      const away = prediction.awayWin?.probability ?? 0;
+      const max = Math.max(home, draw, away);
+      return max === home ? "1x2_home" : max === draw ? "1x2_draw" : "1x2_away";
+    }
+
+    return null;
+  }
+
+  // Prediction performance stats for finished matches
+  const predictionStats = useMemo(() => {
+    let total1x2 = 0;
+    let correct1x2 = 0;
+    let totalProno = 0;
+    let correctProno = 0;
+
+    for (const match of liveMatches) {
+      if (match.status !== "finished" || !match.score || !match.prediction) continue;
+
+      const result = validatePrediction(match.prediction, match.score, match.status);
+
+      if (result.matchResultOutcome !== null) {
+        total1x2++;
+        if (result.matchResultOutcome === "correct") correct1x2++;
+      }
+
+      // Best market prono — mirrors getBestMarket() logic
+      const rawLabel = extractRawBestMarketLabel(match.prediction);
+      if (rawLabel) {
+        const outcome = validateBestMarket(rawLabel, match.score);
+        if (outcome !== null) {
+          totalProno++;
+          if (outcome === "correct") correctProno++;
+        }
+      }
+    }
+
+    return { total1x2, correct1x2, totalProno, correctProno };
+  }, [liveMatches]);
 
   return (
     <div className="space-y-4">
@@ -178,24 +244,64 @@ export function HomeFixturesClient({ initialMatches }: HomeFixturesClientProps) 
         )}
       </div>
 
-      {/* ── 3. Results summary ─────────────────────── */}
-      <div className="flex items-center justify-between px-1">
+      {/* ── 3. Results summary + performance stats ── */}
+      <div className="flex items-center justify-between px-1 flex-wrap gap-2">
         <div className="flex items-center gap-2">
           <span className="text-[13px] font-bold text-text-primary tabular-nums">
-            {filteredMatches.length}
+            {liveMatches.length}
           </span>
           <span className="text-[13px] text-gray-500">
-            match{filteredMatches.length !== 1 ? "s" : ""} disponible{filteredMatches.length !== 1 ? "s" : ""}
+            match{liveMatches.length !== 1 ? "s" : ""}
+          </span>
+          {isLive && (
+            <>
+              <span className="text-[11px] text-gray-300">|</span>
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-error/10 text-error text-[10px] font-semibold animate-pulse">
+                <Radio className="w-2.5 h-2.5" />
+                Live
+              </span>
+            </>
+          )}
+          <span className="text-[11px] text-gray-300">|</span>
+          <span className="text-[11px] text-gray-400 tabular-nums">
+            {format(selectedDate, "dd/MM/yyyy")}
           </span>
         </div>
-        <span className="text-[11px] text-gray-400 tabular-nums">
-          {format(selectedDate, "dd/MM/yyyy")}
-        </span>
+
+        {/* Performance chips */}
+        {(predictionStats.total1x2 > 0 || predictionStats.totalProno > 0) && (
+          <div className="flex items-center gap-2">
+            {predictionStats.total1x2 > 0 && (
+              <div className={cn(
+                "inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-semibold",
+                predictionStats.correct1x2 / predictionStats.total1x2 >= 0.5
+                  ? "bg-success/10 text-success"
+                  : "bg-error/10 text-error"
+              )}>
+                <Check className="w-3 h-3" strokeWidth={3} />
+                <span className="tabular-nums">{predictionStats.correct1x2}/{predictionStats.total1x2}</span>
+                <span className="font-medium opacity-70">1X2</span>
+              </div>
+            )}
+            {predictionStats.totalProno > 0 && (
+              <div className={cn(
+                "inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-semibold",
+                predictionStats.correctProno / predictionStats.totalProno >= 0.5
+                  ? "bg-success/10 text-success"
+                  : "bg-error/10 text-error"
+              )}>
+                <Check className="w-3 h-3" strokeWidth={3} />
+                <span className="tabular-nums">{predictionStats.correctProno}/{predictionStats.totalProno}</span>
+                <span className="font-medium opacity-70">Prono</span>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* ── 4. Match grid ──────────────────────────── */}
       <MatchList
-        matches={filteredMatches}
+        matches={liveMatches}
         onMatchClick={handleMatchClick}
       />
     </div>

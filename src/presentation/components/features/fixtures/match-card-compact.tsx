@@ -8,6 +8,8 @@ import { format, fr } from "@/shared/utils/date"
 import { TEAM_LOGO_BLUR } from "@/shared/utils/image-loader"
 import type { PredictionData } from "@/core/entities/predictions/prediction.entity"
 import { cn } from "@/shared/utils"
+import { validatePrediction, validateBestMarket, type ValidationResult } from "./utils/prediction-validation"
+import { PredictionValidationBadge } from "./prediction-validation-badge"
 
 export interface Match {
   id: string
@@ -44,7 +46,7 @@ function formatPercent(value?: number) {
   return `${(value * 100).toFixed(1)}%`
 }
 
-type BestMarket = { label: string; prob: number }
+type BestMarket = { label: string; rawLabel: string; prob: number }
 
 function formatLine(raw: string) {
   const normalized = raw.replace(/_/g, ".").replace(/\s/g, "")
@@ -260,10 +262,10 @@ function getBestMarket(prediction?: PredictionData, match?: Match): BestMarket |
 
   const direct = anyPred.best_market ?? anyPred.bestMarket
   if (direct && (direct.prob ?? direct.probability) !== undefined) {
-    const rawLabel = direct.market ?? direct.label ?? direct.rule?.label
-    const label = formatMarketLabel(rawLabel, match)
+    const raw = direct.market ?? direct.label ?? direct.rule?.label
+    const label = formatMarketLabel(raw, match)
     if (label) {
-      return { label, prob: direct.prob ?? direct.probability ?? 0 }
+      return { label, rawLabel: raw ?? "", prob: direct.prob ?? direct.probability ?? 0 }
     }
   }
 
@@ -273,28 +275,31 @@ function getBestMarket(prediction?: PredictionData, match?: Match): BestMarket |
     if (opps.length > 0) {
       const best = opps.reduce((acc, cur) => (cur.prob > acc.prob ? cur : acc))
       const label = formatMarketLabel(best.label, match) || best.label
-      return { label, prob: best.prob }
+      return { label, rawLabel: best.label, prob: best.prob }
     }
     const home = p.homeWin?.probability ?? 0
     const draw = p.draw?.probability ?? 0
     const away = p.awayWin?.probability ?? 0
     const best = Math.max(home, draw, away)
     const label = best === home ? "V1" : best === draw ? "Nul" : "V2"
-    return { label, prob: best }
+    const rawLabel = best === home ? "1x2_home" : best === draw ? "1x2_draw" : "1x2_away"
+    return { label, rawLabel, prob: best }
   }
 
   return null
 }
 
-/** Segmented probability bar — equal-width segments */
+/** Segmented probability bar — equal-width segments with validation overlay */
 function ProbabilityBar({
   homeProb,
   drawProb,
   awayProb,
+  validationResult,
 }: {
   homeProb: number
   drawProb: number
   awayProb: number
+  validationResult?: ValidationResult | null
 }) {
   const maxProb = Math.max(homeProb, drawProb, awayProb)
 
@@ -308,6 +313,7 @@ function ProbabilityBar({
     <div className="flex w-full gap-1">
       {segments.map((seg) => {
         const isMax = seg.value === maxProb
+        const showBadge = isMax && validationResult?.matchResultOutcome
         return (
           <div
             key={seg.label}
@@ -315,12 +321,19 @@ function ProbabilityBar({
               "flex-1 flex items-center justify-center py-1.5 rounded-md transition-all duration-300",
               isMax
                 ? "bg-lime text-navy-950 font-bold"
-                : "bg-gray-100 text-gray-500"
+                : "bg-gray-100 text-gray-500",
+              showBadge && "relative"
             )}
           >
             <span className="text-[10px] leading-none">
               {seg.label} <span className="tabular-nums">{seg.value.toFixed(1)}%</span>
             </span>
+            {showBadge && (
+              <PredictionValidationBadge
+                outcome={validationResult.matchResultOutcome}
+                variant="overlay"
+              />
+            )}
           </div>
         )
       })}
@@ -334,6 +347,10 @@ const MatchCardCompact = React.forwardRef<HTMLDivElement, MatchCardCompactProps>
     const [ripplePosition, setRipplePosition] = React.useState({ x: 0, y: 0 })
     const internalRef = React.useRef<HTMLDivElement>(null)
     const prediction = match.prediction
+    const validationResult = React.useMemo(() => {
+      if (match.status !== "finished") return null
+      return validatePrediction(match.prediction, match.score, match.status)
+    }, [match.status, match.prediction, match.score])
     const leagueLogo = (match.league?.logo || "").trim() || "/globe.svg"
     const homeLogo = (match.homeTeam?.logo || "").trim() || "/icon-32.png"
     const awayLogo = (match.awayTeam?.logo || "").trim() || "/icon-32.png"
@@ -526,6 +543,7 @@ const MatchCardCompact = React.forwardRef<HTMLDivElement, MatchCardCompactProps>
                 homeProb={pred.homeWin.probability * 100}
                 drawProb={pred.draw.probability * 100}
                 awayProb={pred.awayWin.probability * 100}
+                validationResult={validationResult}
               />
             )
           })() : (
@@ -539,17 +557,21 @@ const MatchCardCompact = React.forwardRef<HTMLDivElement, MatchCardCompactProps>
           )}
         </div>
 
-        {/* Best market chip */}
+        {/* Best market chip + validation badge */}
         {(() => {
           const bestMarket = getBestMarket(prediction, match)
           if (!bestMarket) return null
+          const bestMarketOutcome = match.status === "finished" && match.score
+            ? validateBestMarket(bestMarket.rawLabel, match.score)
+            : null
           return (
-            <div className="px-4 pb-3 flex justify-center">
+            <div className="px-4 pb-3 flex justify-center items-center gap-1.5">
               <div className="inline-flex items-center gap-1.5 rounded-md bg-lime-100 border border-lime/20 px-2.5 py-1 text-[11px] text-navy">
                 <span className="font-medium text-navy/60">Prono</span>
                 <span className="font-bold">{bestMarket.label}</span>
                 <span className="tabular-nums font-semibold text-lime-600">{formatPercent(bestMarket.prob)}</span>
               </div>
+              <PredictionValidationBadge outcome={bestMarketOutcome} variant="inline" />
             </div>
           )
         })()}
