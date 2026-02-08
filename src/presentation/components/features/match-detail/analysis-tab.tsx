@@ -7,6 +7,7 @@ import { TrendingUp, Heart, Shield, Clock, Zap, Users, Info } from "lucide-react
 import { OpportunitiesList } from "./smart-analysis/opportunities"
 import { GoalsHeatmap } from "./smart-analysis/goals-heatmap"
 import { AsianMarketsSummary } from "./smart-analysis/asian-markets"
+import { ModelNarration } from "./model-narration"
 
 interface AnalysisTabProps {
   match: MatchDetail
