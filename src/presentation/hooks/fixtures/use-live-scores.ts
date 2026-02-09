@@ -63,16 +63,25 @@ function mergeScores(
     const newStatus = mapLiveStatus(update.status)
     const scoreChanged =
       match.score?.home !== update.score.home ||
-      match.score?.away !== update.score.away
+      match.score?.away !== update.score.away ||
+      (update.score.halftime &&
+        (match.score?.halftime?.home !== update.score.halftime.home ||
+          match.score?.halftime?.away !== update.score.halftime.away))
     const statusChanged = match.status !== newStatus
+    const elapsedChanged = (update.minute ?? null) !== (match.elapsed ?? null)
 
-    if (!scoreChanged && !statusChanged) return match
+    if (!scoreChanged && !statusChanged && !elapsedChanged) return match
 
     changed = true
     return {
       ...match,
       status: newStatus,
-      score: { home: update.score.home, away: update.score.away },
+      score: {
+        home: update.score.home,
+        away: update.score.away,
+        halftime: update.score.halftime ?? match.score?.halftime,
+      },
+      elapsed: update.minute ?? match.elapsed,
     }
   })
 

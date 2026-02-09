@@ -13,7 +13,14 @@ export interface LiveScoreEvent {
 export interface LiveScoreUpdate {
   fixtureId: number
   status: "live" | "halftime" | "break" | "finished"
-  score: { home: number; away: number }
+  score: {
+    home: number
+    away: number
+    halftime?: {
+      home: number
+      away: number
+    }
+  }
   minute: number | null
   homeTeam: string | null
   awayTeam: string | null
