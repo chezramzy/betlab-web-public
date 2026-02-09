@@ -33,6 +33,7 @@ export interface Match {
   }
   prediction?: PredictionData
   isFavorite?: boolean
+  elapsed?: number
 }
 
 export interface MatchCardCompactProps
