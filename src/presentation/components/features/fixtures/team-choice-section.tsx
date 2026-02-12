@@ -24,15 +24,15 @@ export function TeamChoiceSection({ matches }: TeamChoiceSectionProps) {
         <div className="space-y-3 pt-2">
             <div className="flex items-center justify-between px-1">
                 <div className="flex items-center gap-2">
-                    <div className="p-1 px-2 rounded-md bg-lime text-navy-950 text-[10px] font-bold uppercase tracking-wider shadow-[0_0_10px_rgba(184,204,58,0.2)]">
+                    <div className="p-1 px-2.5 rounded-full bg-lime text-navy-950 text-[9px] font-black uppercase tracking-[0.1em] shadow-[0_2px_10px_rgba(184,204,58,0.3)] border border-white/20">
                         Exclusif
                     </div>
-                    <h2 className="text-[14px] font-extrabold text-navy-900 uppercase tracking-tight flex items-center gap-1.5 dark:text-navy-100">
+                    <h2 className="text-[15px] font-black text-navy-950 uppercase tracking-tighter flex items-center gap-1.5 dark:text-white">
                         <Star className="w-4 h-4 fill-lime text-lime animate-pulse" />
                         Choix de l'équipe
                     </h2>
                 </div>
-                <div className="text-[11px] text-gray-400 font-medium tabular-nums">Top {topPicks.length} du jour</div>
+                <div className="text-[10px] text-gray-400 font-bold uppercase tracking-widest tabular-nums">Top {topPicks.length} Selection</div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -84,9 +84,11 @@ export function TeamChoiceSection({ matches }: TeamChoiceSectionProps) {
                                 </div>
 
                                 {/* Prediction Bubble */}
-                                <div className="flex flex-col items-center justify-center min-w-[90px] px-3 py-3 rounded-2xl bg-navy-950 text-white shadow-xl ring-1 ring-white/10">
-                                    <span className="text-[9px] font-black text-lime uppercase tracking-widest mb-1 opacity-80">Prono</span>
-                                    <span className="text-[13px] font-black uppercase text-center leading-[1.1] text-balance">
+                                <div className="flex flex-col items-center justify-center min-w-[100px] px-3 py-2.5 rounded-xl bg-lime-50 border border-lime-200/50 shadow-inner group-hover:bg-lime/20 dark:bg-lime-900/20 dark:border-lime-800/30 transition-colors">
+                                    <span className="text-[9px] font-black text-lime-700 uppercase tracking-[0.15em] mb-0.5 dark:text-lime-400">
+                                        Prono
+                                    </span>
+                                    <span className="text-[12px] font-black uppercase text-center leading-tight text-navy-950 dark:text-white text-balance">
                                         {match.bestMarket?.label}
                                     </span>
                                 </div>
