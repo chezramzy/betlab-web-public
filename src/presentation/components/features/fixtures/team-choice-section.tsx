@@ -19,6 +19,8 @@ export function TeamChoiceSection({ matches }: TeamChoiceSectionProps) {
     }, [matches])
 
     if (topPicks.length === 0) return null
+    const isEuropeanHandicapLabel = (label: string) =>
+        /\(\d+\s*:\s*\d+\)\s*(v1|v2|x)/i.test(label)
 
     return (
         <div className="space-y-3 pt-2">
@@ -85,7 +87,9 @@ export function TeamChoiceSection({ matches }: TeamChoiceSectionProps) {
 
                                 <div className="flex flex-col gap-1 px-3 py-2 rounded-xl bg-lime-50 border border-lime-200/50 group-hover:bg-lime/20 dark:bg-lime-900/10 dark:border-lime-800/20 transition-colors">
                                     <span className="text-[8px] font-black text-lime-700 uppercase tracking-widest dark:text-lime-400">
-                                        Proposition du jour
+                                        {isEuropeanHandicapLabel(match.bestMarket?.label || "")
+                                            ? "Handicap européen"
+                                            : "Proposition du jour"}
                                     </span>
                                     <span className="text-[11px] font-black uppercase leading-tight text-navy-950 dark:text-white text-balance line-clamp-2">
                                         {match.bestMarket?.label}

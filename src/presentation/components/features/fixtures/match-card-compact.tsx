@@ -24,6 +24,9 @@ type PropositionInfo = {
   details?: string[]
 }
 
+const isEuropeanHandicapLabel = (label: string) =>
+  /\(\d+\s*:\s*\d+\)\s*(v1|v2|x)/i.test(label)
+
 function buildPropositionInfo(label: string, match: MatchCardVM): PropositionInfo {
   const lower = label.toLowerCase()
   const probLine = match.bestMarket?.prob
@@ -194,6 +197,9 @@ const MatchCardCompact = React.forwardRef<HTMLDivElement, MatchCardCompactProps>
 
     const validationResult = match.validation ?? null
     const propositionInfo = match.bestMarket ? buildPropositionInfo(match.bestMarket.label, match) : null
+    const propositionTypeLabel = match.bestMarket && isEuropeanHandicapLabel(match.bestMarket.label)
+      ? "Handicap européen"
+      : "Proposition"
 
     const { ref: swipeRef, ...swipeHandlers } = useSwipeable({
       onSwipedLeft: (eventData) => {
@@ -406,7 +412,7 @@ const MatchCardCompact = React.forwardRef<HTMLDivElement, MatchCardCompactProps>
               )}
               aria-label={`Voir explication de la proposition ${match.bestMarket.label}`}
             >
-              <span className="font-medium text-navy/60">Proposition</span>
+              <span className="font-medium text-navy/60">{propositionTypeLabel}</span>
               <span className="font-bold">{match.bestMarket.label}</span>
               <span className="tabular-nums font-semibold text-lime-600">
                 {formatBestMarketPercent(match.bestMarket.prob)}
