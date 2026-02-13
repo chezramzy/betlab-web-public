@@ -8,6 +8,20 @@ export function formatMarketLabel(
   const normalized = lower.replace(/[.\s,]+/g, "_")
   const homeName = context.homeName || "Equipe domicile"
   const awayName = context.awayName || "Equipe exterieur"
+  const formatEuropeanHandicap = (
+    homeH: number,
+    awayH: number,
+    outcome: "V1" | "X" | "V2"
+  ) => `(${homeH}:${awayH})${outcome}`
+
+  const formatEuropeanHandicapFromLine = (
+    line: number,
+    outcome: "V1" | "X" | "V2"
+  ) => {
+    const homeH = line > 0 ? line : 0
+    const awayH = line < 0 ? Math.abs(line) : 0
+    return formatEuropeanHandicap(homeH, awayH, outcome)
+  }
 
   const formatLine = (value: string) => {
     const normalizedLine = value.replace(/_/g, ".").replace(/\s/g, "")
@@ -47,6 +61,14 @@ export function formatMarketLabel(
 
     next = next.replace(".", ",")
     return `${sign}${next}`
+  }
+
+  const normalizedEhc = lower.match(/[\(\[]?(\d+)\s*:\s*(\d+)[\)\]]?\s*(v1|x|v2)/)
+  if (normalizedEhc) {
+    const homeH = parseInt(normalizedEhc[1], 10)
+    const awayH = parseInt(normalizedEhc[2], 10)
+    const outcome = normalizedEhc[3] === "v1" ? "V1" : normalizedEhc[3] === "v2" ? "V2" : "X"
+    return formatEuropeanHandicap(homeH, awayH, outcome)
   }
 
   if (normalized.includes("ht") || normalized.includes("1h")) {
@@ -202,10 +224,23 @@ export function formatMarketLabel(
   const ehcMatch = normalized.match(/ehc_(-?\d+)_([1x2])$/)
   if (ehcMatch) {
     const line = parseInt(ehcMatch[1], 10)
-    const home = line > 0 ? line : 0
-    const away = line < 0 ? Math.abs(line) : 0
     const outcome = ehcMatch[2] === "1" ? "V1" : ehcMatch[2] === "2" ? "V2" : "X"
-    return `Handicap europeen (${home}:${away})${outcome}`
+    return formatEuropeanHandicapFromLine(line, outcome)
+  }
+  if (normalized.includes("handicap_europeen") || normalized.includes("hc_europeen")) {
+    const lineMatch = lower.match(/\(([+-]?\d+(?:[.,]\d+)?)\)/)
+    const lineRaw = lineMatch ? lineMatch[1] : null
+    const line = lineRaw ? parseInt(lineRaw.replace(",", "."), 10) : null
+    const outcome = normalized.includes("domicile") || normalized.includes("home")
+      ? "V1"
+      : normalized.includes("nul") || normalized.includes("draw")
+        ? "X"
+        : normalized.includes("exterieur") || normalized.includes("away")
+          ? "V2"
+          : null
+    if (line !== null && outcome) {
+      return formatEuropeanHandicapFromLine(line, outcome)
+    }
   }
   if (normalized.startsWith("team_over_")) {
     const line = extractLine(normalized.replace(/^team_over_/, ""))

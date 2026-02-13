@@ -166,7 +166,8 @@ export function validateBestMarket(
       normalized.includes("hc_europeen") ||
       normalized.includes("european_handicap")
     ) {
-      const line = extractLineFromLabel(normalized)
+      const signedMatch = rawLabel.match(/\(([+-]?\d+(?:[.,]\d+)?)\)/)
+      const line = signedMatch ? parseLine(signedMatch[1]) : null
       if (line === null) return null
       let outcome: "1" | "x" | "2" | null = null
       if (normalized.includes("domicile") || normalized.includes("home")) outcome = "1"
