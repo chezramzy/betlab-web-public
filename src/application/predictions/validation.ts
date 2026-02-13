@@ -131,6 +131,56 @@ export function validateBestMarket(
     return status === "live" ? null : "correct"
   }
 
+  const checkEuropeanHandicap = (
+    line: number,
+    outcome: "1" | "x" | "2"
+  ): PredictionOutcome => {
+    const adjHome = score.home + line
+    const adjAway = score.away
+    const result = adjHome > adjAway ? "1" : adjHome < adjAway ? "2" : "x"
+    return result === outcome ? "correct" : "incorrect"
+  }
+
+  const parseEuropeanHandicapLabel = (): PredictionOutcome | null => {
+    // Pattern: ...ehc_{line}_{1|x|2}
+    const ehcMatch = normalized.match(/ehc_(-?\d+)_([1x2])$/)
+    if (ehcMatch) {
+      const line = parseInt(ehcMatch[1], 10)
+      const outcome = ehcMatch[2] as "1" | "x" | "2"
+      return checkEuropeanHandicap(line, outcome)
+    }
+
+    // Pattern: Handicap europeen (0:2)V1 or [0:2]V1
+    const bracketMatch = normalized.match(/[\(\[](\d+):(\d+)[\)\]](v1|x|v2)/)
+    if (bracketMatch) {
+      const homeH = parseInt(bracketMatch[1], 10)
+      const awayH = parseInt(bracketMatch[2], 10)
+      const outcome = bracketMatch[3] === "v1" ? "1" : bracketMatch[3] === "v2" ? "2" : "x"
+      const line = homeH - awayH
+      return checkEuropeanHandicap(line, outcome)
+    }
+
+    // Pattern: HC Européen (+1) Domicile / Nul / Extérieur
+    if (
+      normalized.includes("handicap_europeen") ||
+      normalized.includes("hc_europeen") ||
+      normalized.includes("european_handicap")
+    ) {
+      const line = extractLineFromLabel(normalized)
+      if (line === null) return null
+      let outcome: "1" | "x" | "2" | null = null
+      if (normalized.includes("domicile") || normalized.includes("home")) outcome = "1"
+      else if (normalized.includes("nul") || normalized.includes("draw")) outcome = "x"
+      else if (normalized.includes("exterieur") || normalized.includes("away")) outcome = "2"
+      if (outcome) return checkEuropeanHandicap(line, outcome)
+    }
+
+    return null
+  }
+
+  const europeanHandicapOutcome = parseEuropeanHandicapLabel()
+  if (europeanHandicapOutcome) return europeanHandicapOutcome
+
   if (
     normalized.startsWith("over_") ||
     normalized.startsWith("total_over_") ||
