@@ -201,9 +201,11 @@ export function formatMarketLabel(
   // European Handicap (ehc_)
   const ehcMatch = normalized.match(/^ehc_(-?\d+)_([1x2])$/)
   if (ehcMatch) {
-    const hc = formatHandicapLine(ehcMatch[1])
-    const side = ehcMatch[2] === "1" ? homeName : ehcMatch[2] === "x" ? "Nul" : awayName
-    return `Handicap (${hc}) : ${side}`
+    const handicapValue = Number(ehcMatch[1])
+    const virtualHome = handicapValue > 0 ? handicapValue : 0
+    const virtualAway = handicapValue < 0 ? Math.abs(handicapValue) : 0
+    const outcome = ehcMatch[2] === "1" ? "V1" : ehcMatch[2] === "x" ? "X" : "V2"
+    return `Handicap europeen (${virtualHome}:${virtualAway})${outcome}`
   }
   if (normalized.startsWith("team_over_")) {
     const line = extractLine(normalized.replace(/^team_over_/, ""))
@@ -224,6 +226,16 @@ export function formatMarketLabel(
     const dc = normalized.replace(/^dc_/, "").replace(/_/g, "").toUpperCase()
     return `Double chance ${dc}`
   }
+
+  if (normalized === "halves_ht_dc") {
+    return "Double chance 1re mi-temps"
+  }
+
+  if (normalized.startsWith("halves_ht_dc_")) {
+    const dc = normalized.replace(/^halves_ht_dc_/, "").replace(/_/g, "").toUpperCase()
+    return dc ? `Double chance 1re mi-temps ${dc}` : "Double chance 1re mi-temps"
+  }
+
   if (normalized === "dnb_home") return `DNB ${homeName}`
   if (normalized === "dnb_away") return `DNB ${awayName}`
   if (normalized === "btts_yes") return "Les deux marquent - Oui"

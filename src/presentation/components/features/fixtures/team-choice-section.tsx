@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useMemo } from "react"
-import { Star, TrendingUp, ChevronRight } from "lucide-react"
+import { Star, TrendingUp } from "lucide-react"
 import { cn } from "@/shared/utils"
 import { MatchCardVM, formatBestMarketPercent } from "@/application/view-models/fixtures/match-card.vm"
 import NextLink from "next/link"
@@ -29,7 +29,7 @@ export function TeamChoiceSection({ matches }: TeamChoiceSectionProps) {
                     </div>
                     <h2 className="text-[13px] font-black text-navy-900 uppercase tracking-tight flex items-center gap-1.5 dark:text-white">
                         <Star className="w-3.5 h-3.5 fill-lime text-lime animate-pulse" />
-                        Choix de l'équipe
+                        Choix de l&apos;equipe
                     </h2>
                 </div>
                 <div className="text-[10px] text-gray-400 font-bold uppercase tracking-widest tabular-nums font-mono">Top Selection</div>
@@ -67,8 +67,8 @@ export function TeamChoiceSection({ matches }: TeamChoiceSectionProps) {
                             </div>
 
                             {/* Teams */}
-                            <div className="flex items-center gap-4 mb-3">
-                                <div className="flex-1 min-w-0 space-y-2">
+                            <div className="space-y-3">
+                                <div className="space-y-2">
                                     <div className="flex items-center gap-3">
                                         <img src={match.home.logo} alt="" className="w-5 h-5 object-contain" />
                                         <span className="text-xs font-black text-navy-950 truncate leading-none dark:text-white">
@@ -83,14 +83,14 @@ export function TeamChoiceSection({ matches }: TeamChoiceSectionProps) {
                                     </div>
                                 </div>
 
-                                {/* Prediction Bubble */}
-                                <div className="flex flex-col items-center justify-center min-w-[90px] px-2 py-2 rounded-xl bg-lime-50 border border-lime-200/50 group-hover:bg-lime/20 dark:bg-lime-900/10 dark:border-lime-800/20 transition-colors">
-                                    <span className="text-[8px] font-black text-lime-700 uppercase tracking-widest mb-0.5 dark:text-lime-400">
-                                        Prono
-                                    </span>
-                                    <span className="text-[11px] font-black uppercase text-center leading-tight text-navy-950 dark:text-white text-balance">
+                                {/* Daily proposition */}
+                                <div className="rounded-xl bg-lime-50 border border-lime-200/50 px-3 py-2 group-hover:bg-lime/20 dark:bg-lime-900/10 dark:border-lime-800/20 transition-colors">
+                                    <div className="text-[8px] font-black text-lime-700 uppercase tracking-widest mb-1 dark:text-lime-400">
+                                        Proposition du jour
+                                    </div>
+                                    <div className="text-[11px] font-black uppercase leading-tight text-navy-950 dark:text-white break-words">
                                         {match.bestMarket?.label}
-                                    </span>
+                                    </div>
                                 </div>
                             </div>
 
