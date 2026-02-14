@@ -17,6 +17,7 @@ import {
   StatsTab,
   LineupsTab,
   H2HTab,
+  PredictionHero,
   type TabId,
 } from "@/presentation/components/features/match-detail";
 import type { MatchDetail } from "@/core/entities/match-detail/match-detail.entity";
@@ -31,12 +32,17 @@ export function MatchDetailClient({ match }: MatchDetailClientProps) {
   const [activeTab, setActiveTab] = useState<TabId>("overview");
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-[#F8FAFC] pb-20">
       {/* Match Header */}
       <MatchHeader match={match} vm={vm} />
 
+      {/* Hero Section: Best Market Elite */}
+      <PredictionHero vm={vm} />
+
       {/* Tabs Navigation */}
-      <TabsNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+      <div className="sticky top-[244px] z-40 bg-white shadow-sm mb-2">
+        <TabsNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+      </div>
 
       {/* Tab Content */}
       <div className="container mx-auto">

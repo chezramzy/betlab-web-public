@@ -279,6 +279,10 @@ export function formatMarketLabel(
   if (normalized === "1x2_home") return `Victoire ${homeName}`
   if (normalized === "1x2_draw") return "Match nul"
   if (normalized === "1x2_away") return `Victoire ${awayName}`
+  if (normalized.startsWith("multigoals_")) {
+    const line = normalized.replace(/^multigoals_/, "").replace(/_/g, "-")
+    return `Multi-buts ${line}`
+  }
 
   if (lower.includes("team total")) {
     const side = lower.includes("home")

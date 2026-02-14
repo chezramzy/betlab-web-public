@@ -15,6 +15,7 @@ export function getMatchPrediction(match: MatchDetail) {
 export function getMatch1x2(match: MatchDetail, prediction?: MatchResultPrediction): Match1x2 | null {
   const markets = match.probabilities?.markets?.["1x2"];
   if (markets) {
+    // Scaling to 100 for consistency with home view model if needed, but let's keep 0-1 for raw selectors
     return { home: markets.home, draw: markets.draw, away: markets.away };
   }
   if (prediction?.homeWin && prediction?.draw && prediction?.awayWin) {
@@ -24,6 +25,35 @@ export function getMatch1x2(match: MatchDetail, prediction?: MatchResultPredicti
       away: prediction.awayWin.probability,
     };
   }
+  return null;
+}
+
+export function getBestMarket(match: MatchDetail) {
+  const prediction = getMatchPrediction(match);
+  if (!prediction) return null;
+
+  const anyPred = prediction as any;
+  const direct = anyPred.best_market ?? anyPred.bestMarket;
+
+  if (direct && (direct.prob ?? direct.probability) !== undefined) {
+    return {
+      market: direct.market ?? direct.label ?? direct.rule?.label,
+      prob: direct.prob ?? direct.probability ?? 0,
+      odds: direct.odds,
+      edge: direct.edge
+    };
+  }
+
+  // Fallback to opportunities
+  const opps = prediction.analytics?.opportunities ?? [];
+  if (opps.length > 0) {
+    const best = opps.reduce((acc, cur) => (cur.prob > acc.prob ? cur : acc));
+    return {
+      market: best.label,
+      prob: best.prob
+    };
+  }
+
   return null;
 }
 

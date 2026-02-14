@@ -150,6 +150,11 @@ export type DoubleChanceCardVM = {
   drawOrAwayOdds?: number
 }
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> c02c3a7 (fix: resolve TypeScript errors in prediction cards and predictions tab)
 const htStates = [
   { id: "H", label: (home: string) => `${home} mene a la MT` },
   { id: "D", label: () => "Score nul a la MT" },
@@ -379,7 +384,11 @@ function buildCornersCard(match: MatchDetail): CornersCardVM {
   return {
     available: true,
     title: "Corners (Over/Under)",
+<<<<<<< HEAD
     confidence: getConfidenceBadge(prediction.confidence),
+=======
+    confidence: confidenceVariants[(prediction.confidence || "medium") as ConfidenceBadge["level"]],
+>>>>>>> c02c3a7 (fix: resolve TypeScript errors in prediction cards and predictions tab)
     expectedTotal: prediction.expectedTotal,
     rows,
   }
@@ -394,8 +403,13 @@ function buildAsianHandicapCard(match: MatchDetail): AsianHandicapCardVM {
   return {
     available: true,
     title: "Handicap Asiatique",
+<<<<<<< HEAD
     confidence: getConfidenceBadge(prediction.confidence),
     lines: prediction.lines.map((l) => ({
+=======
+    confidence: confidenceVariants[(prediction.confidence || "medium") as ConfidenceBadge["level"]],
+    lines: prediction.lines.map((l: any) => ({
+>>>>>>> c02c3a7 (fix: resolve TypeScript errors in prediction cards and predictions tab)
       line: l.line,
       home: l.home * 100,
       away: l.away * 100,
@@ -413,8 +427,13 @@ function buildAsianTotalsCard(match: MatchDetail): AsianTotalsCardVM {
   return {
     available: true,
     title: "Totaux Asiatiques",
+<<<<<<< HEAD
     confidence: getConfidenceBadge(prediction.confidence),
     lines: prediction.lines.map((l) => ({
+=======
+    confidence: confidenceVariants[(prediction.confidence || "medium") as ConfidenceBadge["level"]],
+    lines: prediction.lines.map((l: any) => ({
+>>>>>>> c02c3a7 (fix: resolve TypeScript errors in prediction cards and predictions tab)
       line: l.line,
       over: l.over * 100,
       under: l.under * 100,
@@ -433,7 +452,11 @@ function buildDoubleChanceCard(match: MatchDetail): DoubleChanceCardVM {
   return {
     available: true,
     title: "Double Chance",
+<<<<<<< HEAD
     confidence: getConfidenceBadge(prediction.confidence),
+=======
+    confidence: confidenceVariants[(prediction.confidence || "medium") as ConfidenceBadge["level"]],
+>>>>>>> c02c3a7 (fix: resolve TypeScript errors in prediction cards and predictions tab)
     homeOrDraw: prediction.homeOrDraw.probability * 100,
     homeOrAway: prediction.homeOrAway.probability * 100,
     drawOrAway: prediction.drawOrAway.probability * 100,

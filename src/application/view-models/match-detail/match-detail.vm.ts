@@ -2,6 +2,7 @@ import type { MatchDetail } from "@/core/entities/match-detail/match-detail.enti
 import type { MatchResultPrediction, ConfidenceLevel } from "@/core/entities/predictions/prediction.entity";
 import { buildPredictionCardsVM, type PredictionCardsVM } from "./prediction-cards.vm";
 import {
+  getBestMarket,
   getMatch1x2,
   getMatchConfidence,
   getMatchDefenseFactor,
@@ -12,6 +13,8 @@ import {
   getMatchRestHours,
   getMatchXg,
 } from "./match-detail.selectors";
+import { formatMarketLabel } from "../fixtures/market-label.fr";
+import { generateNarration, type NarrationResult } from "@/application/utils/match-narrator";
 
 export type RadarPoint = { subject: string; A: number; B: number; fullMark: number };
 
@@ -19,6 +22,13 @@ export type MatchDetailVM = {
   match: MatchDetail;
   prediction?: MatchResultPrediction;
   hasProbabilities: boolean;
+  bestMarket: {
+    label: string;
+    rawLabel: string;
+    prob: number;
+    odds?: number;
+    edge?: number;
+  } | null;
   header: {
     confidence: ConfidenceLevel;
   };
@@ -40,6 +50,7 @@ export type MatchDetailVM = {
     radarData: RadarPoint[];
     opportunities: Array<{ type: string; label: string; prob: number }>
   };
+  narration: NarrationResult;
 };
 
 export function buildMatchDetailVM(match: MatchDetail): MatchDetailVM {
@@ -95,10 +106,23 @@ export function buildMatchDetailVM(match: MatchDetail): MatchDetailVM {
     },
   ];
 
-  return {
+  const rawBestMarket = getBestMarket(match);
+  const bestMarket = rawBestMarket ? {
+    label: formatMarketLabel(rawBestMarket.market, {
+      homeName: match.homeTeam.name,
+      awayName: match.awayTeam.name
+    }) || rawBestMarket.market,
+    rawLabel: rawBestMarket.market,
+    prob: rawBestMarket.prob * 100, // Scaling to 100
+    odds: rawBestMarket.odds,
+    edge: rawBestMarket.edge
+  } : null;
+
+  const vmPartial = {
     match,
     prediction,
     hasProbabilities: Boolean(match.probabilities),
+    bestMarket,
     header: {
       confidence,
     },
@@ -120,5 +144,10 @@ export function buildMatchDetailVM(match: MatchDetail): MatchDetailVM {
       radarData,
       opportunities: prediction?.analytics?.opportunities ?? [],
     },
-  };
+  } as MatchDetailVM;
+
+  // Generate rich expert narration from all available analytics + market data
+  vmPartial.narration = generateNarration(vmPartial, match.probabilities ?? null);
+
+  return vmPartial;
 }

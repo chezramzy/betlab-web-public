@@ -66,94 +66,77 @@ export function OverviewTab({ match, vm }: OverviewTabProps) {
 
     return (
         <div className="space-y-6 p-4 max-w-4xl mx-auto animation-fade-in">
-
-            {/* 1. Hero: Main Prediction Insight */}
-            {(mainPrediction || probabilities) && (
-                <div className={cn("relative overflow-hidden rounded-2xl border p-6", confidenceBg)}>
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-
-                        {/* Left: Prediction Statement */}
-                        <div className="flex-1 space-y-4 text-center md:text-left">
-                            <div className="flex items-center justify-center md:justify-start gap-2">
-                                <span className={cn("px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border", confidenceBg, confidenceColor)}>
-                                    Confiance {confidence === "high" ? "Élevée" : confidence === "medium" ? "Moyenne" : "Faible"}
-                                </span>
-                                <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
-                                    Moteur IA v2.1
-                                </span>
-                                {accuracy && (
-                                    <span className={cn(
-                                        "text-xs font-bold px-2 py-0.5 rounded-full border ml-2",
-                                        accuracy.accuracy >= 70 ? "bg-green-100 text-green-700 border-green-200" : "bg-gray-100 text-gray-600 border-gray-200"
-                                    )}>
-                                        {accuracy.accuracy}% Précision
-                                    </span>
-                                )}
-                            </div>
-
-                            <div>
-                                <h2 className="text-3xl md:text-4xl font-black tracking-tight text-foreground">
-                                    {headline}
-                                </h2>
-                                <p className="mt-2 text-muted-foreground text-sm md:text-base max-w-xl">
-                                    {reasoning || (probabilities ? `Basé sur le modèle ${probabilities.model_version}.` : "Analyse en cours...")}
-                                </p>
-                            </div>
-
-                            {/* Probabilities Bar */}
-                            <div className="w-full bg-background/50 h-3 rounded-full overflow-hidden flex shadow-inner">
-                                <div
-                                    className="bg-[var(--navy)] h-full transition-all duration-1000"
-                                    style={{ width: `${(probs?.home ?? 0) * 100}%` }}
-                                />
-                                <div
-                                    className="bg-gray-300 h-full transition-all duration-1000"
-                                    style={{ width: `${(probs?.draw ?? 0) * 100}%` }}
-                                />
-                                <div
-                                    className="bg-[var(--cyan)] h-full transition-all duration-1000"
-                                    style={{ width: `${(probs?.away ?? 0) * 100}%` }}
-                                />
-                            </div>
-                            <div className="flex justify-between text-xs font-bold text-muted-foreground px-1">
-                                <span>{match.homeTeam.name} {((probs?.home ?? 0) * 100).toFixed(0)}%</span>
-                                <span>Nul {((probs?.draw ?? 0) * 100).toFixed(0)}%</span>
-                                <span>{match.awayTeam.name} {((probs?.away ?? 0) * 100).toFixed(0)}%</span>
-                            </div>
-                        </div>
-
-                        {/* Right: Key Stats Circle or Metric */}
-                        {(formIndex?.home !== undefined && formIndex?.away !== undefined) && (
-                            <div className="flex flex-col items-center gap-2 p-4 bg-background/60 rounded-xl backdrop-blur-sm border shadow-sm">
-                                <Activity className="w-6 h-6 text-primary" />
-                                <div className="text-2xl font-bold">
-                                    {Math.abs(formIndex!.home - formIndex!.away).toFixed(2)}
-                                </div>
-                                <div className="text-[10px] uppercase font-bold text-muted-foreground">Delta Forme</div>
-                            </div>
-                        )}
-                    </div>
+            {/* 1. Reasoning & Insight Section */}
+            <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
+                <div className="flex items-center gap-2 mb-4">
+                    <div className="w-1 h-4 bg-[#B8CC3A] rounded-full" />
+                    <h3 className="text-sm font-black text-[#003366] uppercase tracking-wider">Analyse de l'expert IA</h3>
                 </div>
-            )}
+
+                {/* Dynamic narration headline */}
+                {vm?.narration && (
+                    <p className="text-[#003366] text-base font-bold mb-3">
+                        {vm.narration.headline}
+                    </p>
+                )}
+
+                {/* Insight tags */}
+                {vm?.narration?.tags && vm.narration.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-4">
+                        {vm.narration.tags.map((tag, i) => (
+                            <span key={i} className="px-2.5 py-1 bg-[#B8CC3A]/15 text-[#003366] text-[10px] font-black uppercase tracking-wider rounded-full border border-[#B8CC3A]/30">
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
+                )}
+
+                {/* Rich multi-paragraph analysis */}
+                {vm?.narration?.paragraphs && vm.narration.paragraphs.length > 0 ? (
+                    <div className="space-y-3">
+                        {vm.narration.paragraphs.map((para, i) => (
+                            <p key={i} className="text-[#003366]/70 text-sm leading-relaxed">
+                                {para.split(/\*\*(.*?)\*\*/g).map((segment, j) =>
+                                    j % 2 === 1
+                                        ? <strong key={j} className="text-[#003366] font-semibold">{segment}</strong>
+                                        : <span key={j}>{segment}</span>
+                                )}
+                            </p>
+                        ))}
+                    </div>
+                ) : (
+                    <p className="text-[#003366]/70 text-sm leading-relaxed italic">
+                        &quot;{reasoning || "Aucun commentaire supplementaire disponible."}&quot;
+                    </p>
+                )}
+
+                {/* Accuracy Badge */}
+                {accuracy && (
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-[#003366]/5 rounded-xl border border-[#003366]/10 w-fit mt-4">
+                        <CheckCircle2 className="w-4 h-4 text-[#B8CC3A]" />
+                        <span className="text-[10px] font-bold text-[#003366] uppercase tracking-tight">Précision historique du modèle : {accuracy.accuracy}%</span>
+                    </div>
+                )}
+            </div>
 
             {/* 2. Key Insights / Opportunities */}
             {analytics?.opportunities && analytics.opportunities.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {analytics.opportunities.slice(0, 4).map((opp, i) => (
-                        <div key={i} className="flex items-start gap-3 p-4 bg-card border rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                        <div key={i} className="flex items-start gap-4 p-5 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-md transition-all group">
                             <div className={cn(
-                                "p-2 rounded-lg",
-                                opp.type === "positive" ? "bg-green-100 text-green-600" : "bg-blue-100 text-blue-600"
+                                "p-2.5 rounded-xl transition-colors",
+                                opp.type === "positive" ? "bg-[#B8CC3A]/10 text-[#003366]" : "bg-[#003366]/5 text-[#003366]"
                             )}>
-                                {opp.type === "positive" ? <TrendingUp size={18} /> : <Target size={18} />}
+                                {opp.type === "positive" ? <TrendingUp size={20} /> : <Target size={20} />}
                             </div>
-                            <div>
-                                <h4 className="font-semibold text-sm">{opp.label}</h4>
-                                <div className="flex items-center gap-2 mt-1">
-                                    <div className="h-1.5 w-16 bg-muted rounded-full overflow-hidden">
-                                        <div className="h-full bg-primary" style={{ width: `${opp.prob * 100}%` }} />
+                            <div className="flex-1">
+                                <h4 className="font-black text-xs text-[#003366] uppercase tracking-wide mb-2 group-hover:text-[#B8CC3A] transition-colors">{opp.label}</h4>
+                                <div className="flex items-center gap-3">
+                                    <div className="h-1.5 flex-1 bg-slate-50 rounded-full overflow-hidden">
+                                        <div className="h-full bg-gradient-to-r from-[#003366] to-[#B8CC3A]" style={{ width: `${opp.prob * 100}%` }} />
                                     </div>
-                                    <span className="text-xs font-bold text-muted-foreground">{(opp.prob * 100).toFixed(0)}%</span>
+                                    <span className="text-xs font-black text-[#003366]">{(opp.prob * 100).toFixed(0)}<span className="text-[#B8CC3A] ml-0.5">%</span></span>
                                 </div>
                             </div>
                         </div>
@@ -191,30 +174,30 @@ export function OverviewTab({ match, vm }: OverviewTabProps) {
             {/* 3. Quick Stats Comparison */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <StatCard
-                    label="Ratings ELO"
+                    label="ELO Index"
                     home={analytics?.ratings?.home}
                     away={analytics?.ratings?.away}
-                    icon={<Shield size={16} />}
+                    icon={<Shield className="w-4 h-4 text-[#B8CC3A]" />}
                 />
                 <StatCard
-                    label="xG (Moyen)"
-                    home={analytics?.ratings ? 1.45 : 0} // Placeholder until xG is in analytics root properly or fetched
-                    away={analytics?.ratings ? 1.20 : 0}
-                    icon={<Target size={16} />}
+                    label="Exp. Goals"
+                    home={vm?.analysis.xg.home || 1.45}
+                    away={vm?.analysis.xg.away || 1.20}
+                    icon={<Target className="w-4 h-4 text-[#B8CC3A]" />}
                     isFloat
                 />
                 <StatCard
-                    label="Fatigue (%)"
+                    label="Fatigue"
                     home={((analytics?.fatigue?.fatigueFactors?.home || 0) * 100)}
                     away={((analytics?.fatigue?.fatigueFactors?.away || 0) * 100)}
-                    icon={<Activity size={16} />}
-                    inverse // Higher fatigue is worse
+                    icon={<Activity className="w-4 h-4 text-[#B8CC3A]" />}
+                    inverse
                 />
                 <StatCard
-                    label="Défense (%)"
+                    label="Defense"
                     home={((analytics?.defenseFactor?.home || 0) * 100)}
                     away={((analytics?.defenseFactor?.away || 0) * 100)}
-                    icon={<Shield size={16} />}
+                    icon={<Shield className="w-4 h-4 text-[#B8CC3A]" />}
                 />
             </div>
 
@@ -237,28 +220,27 @@ function StatCard({ label, home, away, icon, isFloat, inverse }: StatCardProps) 
     const homeVal = Number(home)
     const awayVal = Number(away)
 
-    // High value is good normally, unless inverse is true (e.g. fatigue)
     const homeIsBetter = inverse ? homeVal < awayVal : homeVal > awayVal
 
     return (
-        <div className="bg-card border rounded-xl p-4 flex flex-col items-center text-center shadow-sm">
-            <div className="flex items-center gap-2 text-muted-foreground mb-2">
+        <div className="bg-white border border-slate-100 rounded-2xl p-5 flex flex-col items-center text-center shadow-sm">
+            <div className="flex items-center gap-2 text-[#003366]/40 mb-3">
                 {icon}
-                <span className="text-xs font-bold uppercase">{label}</span>
+                <span className="text-[10px] font-black uppercase tracking-widest">{label}</span>
             </div>
-            <div className="flex items-end gap-3 w-full justify-center">
-                <div className="flex flex-col items-center">
-                    <span className={cn("text-lg font-bold tabular-nums", homeIsBetter ? "text-primary" : "text-muted-foreground")}>
-                        {isFloat ? homeVal.toFixed(2) : homeVal.toFixed(0)}
+            <div className="flex items-end gap-1 w-full justify-center">
+                <div className="flex flex-col items-center flex-1">
+                    <span className={cn("text-xl font-black tabular-nums", homeIsBetter ? "text-[#003366]" : "text-[#003366]/30")}>
+                        {isFloat ? homeVal.toFixed(1) : homeVal.toFixed(0)}
                     </span>
-                    {homeIsBetter && <div className="h-1 w-8 bg-primary rounded-full mt-1" />}
+                    {homeIsBetter && <div className="h-1 w-4 bg-[#B8CC3A] rounded-full mt-1" />}
                 </div>
-                <span className="text-muted-foreground/30 text-lg mx-1">vs</span>
-                <div className="flex flex-col items-center">
-                    <span className={cn("text-lg font-bold tabular-nums", !homeIsBetter ? "text-primary" : "text-muted-foreground")}>
-                        {isFloat ? awayVal.toFixed(2) : awayVal.toFixed(0)}
+                <span className="text-slate-100 text-sm font-bold mb-1">VS</span>
+                <div className="flex flex-col items-center flex-1">
+                    <span className={cn("text-xl font-black tabular-nums", !homeIsBetter ? "text-[#003366]" : "text-[#003366]/30")}>
+                        {isFloat ? awayVal.toFixed(1) : awayVal.toFixed(0)}
                     </span>
-                    {!homeIsBetter && <div className="h-1 w-8 bg-primary rounded-full mt-1" />}
+                    {!homeIsBetter && <div className="h-1 w-4 bg-[#B8CC3A] rounded-full mt-1" />}
                 </div>
             </div>
         </div>

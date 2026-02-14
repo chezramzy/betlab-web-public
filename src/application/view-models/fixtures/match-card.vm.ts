@@ -40,6 +40,9 @@ export type MatchCardVM = {
     label: string
     rawLabel: string
     prob: number
+    edge?: number
+    odds?: number
+    source: "curated" | "opportunity" | "fallback_1x2"
   }
   validation?: ValidationResult
   prediction?: PredictionData
@@ -52,6 +55,8 @@ function getBestMarket(prediction?: PredictionData, match?: MatchWithPrediction)
       market?: string
       prob?: number
       probability?: number
+      edge?: number
+      odds?: number
       rule?: { label?: string }
     }
     bestMarket?: {
@@ -59,6 +64,8 @@ function getBestMarket(prediction?: PredictionData, match?: MatchWithPrediction)
       market?: string
       prob?: number
       probability?: number
+      edge?: number
+      odds?: number
       rule?: { label?: string }
     }
   }
@@ -71,7 +78,14 @@ function getBestMarket(prediction?: PredictionData, match?: MatchWithPrediction)
       awayName: match?.awayTeam?.name ?? "?quipe ext?rieur",
     })
     if (label) {
-      return { label, rawLabel: raw ?? "", prob: direct.prob ?? direct.probability ?? 0 }
+      return {
+        label,
+        rawLabel: raw ?? "",
+        prob: direct.prob ?? direct.probability ?? 0,
+        edge: typeof direct.edge === "number" ? direct.edge : undefined,
+        odds: typeof direct.odds === "number" ? direct.odds : undefined,
+        source: "curated" as const,
+      }
     }
   }
 
@@ -85,7 +99,7 @@ function getBestMarket(prediction?: PredictionData, match?: MatchWithPrediction)
           homeName: match?.homeTeam?.name ?? "?quipe domicile",
           awayName: match?.awayTeam?.name ?? "?quipe ext?rieur",
         }) || best.label
-      return { label, rawLabel: best.label, prob: best.prob }
+      return { label, rawLabel: best.label, prob: best.prob, source: "opportunity" as const }
     }
     const home = p.homeWin?.probability ?? 0
     const draw = p.draw?.probability ?? 0
@@ -93,7 +107,7 @@ function getBestMarket(prediction?: PredictionData, match?: MatchWithPrediction)
     const best = Math.max(home, draw, away)
     const label = best === home ? "V1" : best === draw ? "Nul" : "V2"
     const rawLabel = best === home ? "1x2_home" : best === draw ? "1x2_draw" : "1x2_away"
-    return { label, rawLabel, prob: best }
+    return { label, rawLabel, prob: best, source: "fallback_1x2" as const }
   }
 
   return null
@@ -171,6 +185,9 @@ export function buildMatchCardVM(match: MatchWithPrediction): MatchCardVM {
         prob: Number.isFinite(bestMarket.prob)
           ? Number(bestMarket.prob)
           : 0,
+        edge: bestMarket.edge,
+        odds: bestMarket.odds,
+        source: bestMarket.source,
       }
       : undefined,
     validation,

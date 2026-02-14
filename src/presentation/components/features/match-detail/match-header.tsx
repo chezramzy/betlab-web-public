@@ -29,61 +29,42 @@ export function MatchHeader({ match, vm }: MatchHeaderProps) {
   const confidence = vm?.header.confidence ?? getMatchConfidence(match, mainPrediction ?? undefined)
 
   return (
-    <div className="sticky top-0 z-50 gradient-header shadow-xl">
+    <div className="sticky top-0 z-50 bg-white border-b border-slate-100 shadow-sm">
       {/* Safe area pour iOS notch */}
       <div className="h-[env(safe-area-inset-top)]" />
 
-      <div className="container mx-auto px-4 py-4 flex flex-col gap-4">
-        {/* League Info + Favorite + Confidence Badge */}
+      <div className="container mx-auto px-4 py-4 flex flex-col gap-6">
+        {/* League Info + Favorite */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="relative w-6 h-6 rounded bg-white/10 p-0.5 backdrop-blur-sm">
+            <div className="relative w-5 h-5">
               <Image
                 src={leagueLogo}
                 alt={match.league.name}
                 fill
-                className="object-contain"
-                sizes="24px"
+                className="object-contain opacity-60"
+                sizes="20px"
               />
             </div>
-            <span className="text-xs text-white/80 font-medium tracking-wide">
+            <span className="text-[10px] text-[#003366]/40 font-bold uppercase tracking-[0.2em]">
               {match.league.name}
             </span>
           </div>
 
           <div className="flex items-center gap-2">
-            {confidence && (
-              <div className={cn(
-                "flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border",
-                confidence === "high" ? "bg-green-500/20 border-green-400/30 text-green-300" :
-                  confidence === "medium" ? "bg-yellow-500/20 border-yellow-400/30 text-yellow-300" :
-                    "bg-red-500/20 border-red-400/30 text-red-300"
-              )}>
-                <ShieldCheck size={12} />
-                <span>{confidence === "high" ? "Confiant" : confidence === "medium" ? "Moyen" : "Risqué"}</span>
-              </div>
-            )}
-
             <button
-              className={cn(
-                "flex items-center justify-center",
-                "w-9 h-9 rounded-full",
-                "bg-white/10 hover:bg-white/20",
-                "transition-all duration-200",
-                "active:scale-95"
-              )}
-              aria-label="Ajouter aux favoris"
+              className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-[#003366]/30 active:text-red-500 transition-colors"
             >
-              <Heart className="w-4 h-4 text-white/70" />
+              <Heart className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        {/* Teams + Score/Time */}
-        <div className="flex items-center justify-between gap-2 md:gap-8">
+        {/* Teams & Score Section */}
+        <div className="flex items-center justify-between px-2">
           {/* Home Team */}
-          <div className="flex flex-col items-center gap-2 flex-1 min-w-0">
-            <div className="relative w-16 h-16 rounded-2xl bg-white/5 p-2 shadow-2xl ring-1 ring-white/10">
+          <div className="flex flex-col items-center gap-3 flex-1">
+            <div className="relative w-16 h-16 rounded-2xl bg-slate-50 p-3 ring-1 ring-slate-100">
               <Image
                 src={homeLogo}
                 alt={match.homeTeam.name}
@@ -93,34 +74,49 @@ export function MatchHeader({ match, vm }: MatchHeaderProps) {
                 priority
               />
             </div>
-            <span className="text-sm font-bold text-white text-center line-clamp-2 leading-tight max-w-[120px]">
+            <span className="text-xs font-black text-[#003366] text-center leading-[1.1] max-w-[100px] uppercase tracking-tight">
               {match.homeTeam.name}
             </span>
           </div>
 
-          {/* Center */}
-          <div className="flex flex-col items-center justify-center gap-1 min-w-[100px] z-10">
-            {isLive && <LiveBadge elapsed={match.elapsed} />}
-
-            {isLive && match.score && (
-              <ScoreDisplay homeScore={match.score.home ?? 0} awayScore={match.score.away ?? 0} isLive />
+          {/* Center: Score or Time */}
+          <div className="flex flex-col items-center justify-center min-w-[80px]">
+            {isLive && (
+              <div className="mb-2">
+                <LiveBadge elapsed={match.elapsed} />
+              </div>
             )}
 
-            {isFinished && match.score && (
-              <>
-                <ScoreDisplay homeScore={match.score.home ?? 0} awayScore={match.score.away ?? 0} />
-                <span className="text-[10px] font-bold text-white/50 uppercase tracking-widest mt-1">
-                  Terminé
-                </span>
-              </>
-            )}
+            <div className="flex items-center gap-3">
+              {isScheduled ? (
+                <div className="flex flex-col items-center">
+                  <span className="text-2xl font-black text-[#003366] tracking-tighter tabular-nums">
+                    {match.kickoffTime.getHours().toString().padStart(2, "0")}:
+                    {match.kickoffTime.getMinutes().toString().padStart(2, "0")}
+                  </span>
+                  <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest">Aujourd'hui</span>
+                </div>
+              ) : (
+                <>
+                  <span className="text-4xl font-black text-[#003366] tabular-nums">
+                    {match.score?.home ?? 0}
+                  </span>
+                  <span className="text-xl font-bold text-slate-200">-</span>
+                  <span className="text-4xl font-black text-[#003366] tabular-nums">
+                    {match.score?.away ?? 0}
+                  </span>
+                </>
+              )}
+            </div>
 
-            {isScheduled && <KickoffTime time={match.kickoffTime} />}
+            {isFinished && (
+              <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest mt-2">Terminé</span>
+            )}
           </div>
 
           {/* Away Team */}
-          <div className="flex flex-col items-center gap-2 flex-1 min-w-0">
-            <div className="relative w-16 h-16 rounded-2xl bg-white/5 p-2 shadow-2xl ring-1 ring-white/10">
+          <div className="flex flex-col items-center gap-3 flex-1">
+            <div className="relative w-16 h-16 rounded-2xl bg-slate-50 p-3 ring-1 ring-slate-100">
               <Image
                 src={awayLogo}
                 alt={match.awayTeam.name}
@@ -130,24 +126,24 @@ export function MatchHeader({ match, vm }: MatchHeaderProps) {
                 priority
               />
             </div>
-            <span className="text-sm font-bold text-white text-center line-clamp-2 leading-tight max-w-[120px]">
+            <span className="text-xs font-black text-[#003366] text-center leading-[1.1] max-w-[100px] uppercase tracking-tight">
               {match.awayTeam.name}
             </span>
           </div>
         </div>
 
-        {/* Venue & Referee */}
-        {(match.venue || match.referee) && (
-          <div className="flex items-center justify-center gap-3 text-[10px] text-white/40 font-medium tracking-wide">
-            {match.venue && <span>{match.venue}</span>}
-            {match.venue && match.referee && <span className="text-white/20">•</span>}
-            {match.referee && <span>{match.referee}</span>}
+        {/* Bottom Metadata */}
+        <div className="flex items-center justify-center gap-4 border-t border-slate-50 pt-4 pb-1">
+          <div className="flex items-center gap-1.5">
+            <div className="w-1 h-1 rounded-full bg-[#B8CC3A]" />
+            <span className="text-[9px] font-black text-[#003366]/60 uppercase tracking-wider">{match.venue || "Stade Principal"}</span>
           </div>
-        )}
+          <div className="flex items-center gap-1.5">
+            <div className="w-1 h-1 rounded-full bg-[#B8CC3A]" />
+            <span className="text-[9px] font-black text-[#003366]/60 uppercase tracking-wider">{match.referee || "Arbitre Elite"}</span>
+          </div>
+        </div>
       </div>
-
-      {/* Decorative background glow */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
     </div>
   )
 }

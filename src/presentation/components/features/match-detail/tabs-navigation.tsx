@@ -32,8 +32,8 @@ export function TabsNavigation({
   onTabChange,
 }: TabsNavigationProps) {
   return (
-    <div className="sticky top-[180px] z-40 bg-background border-b">
-      <div className="flex items-center">
+    <div className="w-full bg-white border-b border-slate-100 overflow-x-auto no-scrollbar">
+      <div className="flex items-center min-w-max px-2">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id
 
@@ -42,26 +42,25 @@ export function TabsNavigation({
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
               className={cn(
-                // Layout
-                "relative flex-1 py-4",
-                // Typography
-                "text-sm font-medium transition-all duration-200",
-                // Mobile touch target
-                "min-h-[44px]",
-                // Active/Inactive states
+                "relative py-4 px-6 transition-all duration-300",
+                "text-xs font-black uppercase tracking-widest",
+                "active:scale-95",
                 isActive
-                  ? "text-[var(--navy)] scale-105"
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "text-[#003366]"
+                  : "text-slate-300 hover:text-[#003366]/60"
               )}
               aria-selected={isActive}
               role="tab"
             >
               {tab.label}
 
-              {/* Animated indicator bar */}
-              {isActive && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[var(--lime)]" />
-              )}
+              {/* Minimalist marker */}
+              <div
+                className={cn(
+                  "absolute bottom-0 left-1/2 -translate-x-1/2 h-1 bg-[#B8CC3A] rounded-t-full transition-all duration-300",
+                  isActive ? "w-8 opacity-100" : "w-0 opacity-0"
+                )}
+              />
             </button>
           )
         })}

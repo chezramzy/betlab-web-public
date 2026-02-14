@@ -1,4 +1,5 @@
 export { MatchHeader } from "./match-header"
+export { PredictionHero } from "./prediction-hero"
 export { TabsNavigation } from "./tabs-navigation"
 export { PredictionsTab } from "./predictions-tab"
 export { AnalysisTab } from "./analysis-tab"
