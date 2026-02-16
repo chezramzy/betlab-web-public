@@ -6,6 +6,7 @@ import NextLink from "next/link";
 
 import type { TeamChoicePick } from "@/core/entities/fixtures/fixture.entity";
 import { MatchCardVM, formatBestMarketPercent } from "@/application/view-models/fixtures/match-card.vm";
+import { formatTeamChoiceLabel } from "@/application/view-models/fixtures/team-choice-label.fr";
 import { cn } from "@/shared/utils";
 
 const MIN_PROB = 0.55;
@@ -50,8 +51,13 @@ export function TeamChoiceSection({ matches, teamChoices = [] }: TeamChoiceSecti
     return teamChoices
       .slice(0, MAX_PICKS)
       .map((pick) => {
-        const labelBase = pick.recommendedMarket || "1X2";
-        const label = pick.selection ? `${labelBase} - ${pick.selection}` : labelBase;
+        const label = formatTeamChoiceLabel({
+          recommendedMarket: pick.recommendedMarket,
+          selection: pick.selection,
+          homeName: pick.homeTeam.name,
+          awayName: pick.awayTeam.name,
+          teamName: pick.teamName,
+        });
         return {
           id: String(pick.fixtureId),
           href: `/match/${pick.fixtureId}`,
