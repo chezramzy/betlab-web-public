@@ -26,14 +26,15 @@ import {
 import { useFixtureFilters } from "@/presentation/hooks/fixtures/use-fixture-filters";
 import { useLiveScores } from "@/presentation/hooks/fixtures/use-live-scores";
 import { buildMatchCardVM } from "@/application/view-models/fixtures/match-card.vm";
-import type { MatchWithPrediction } from "@/core/entities/fixtures/fixture.entity";
+import type { MatchWithPrediction, TeamChoicePick } from "@/core/entities/fixtures/fixture.entity";
 import { cn } from "@/shared/utils";
 
 interface HomeFixturesClientProps {
   initialMatches: MatchWithPrediction[];
+  initialTeamChoices?: TeamChoicePick[];
 }
 
-export function HomeFixturesClient({ initialMatches }: HomeFixturesClientProps) {
+export function HomeFixturesClient({ initialMatches, initialTeamChoices = [] }: HomeFixturesClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [showFilters, setShowFilters] = useState(false);
@@ -144,7 +145,7 @@ export function HomeFixturesClient({ initialMatches }: HomeFixturesClientProps) 
       />
 
       {/* ── 1.5. Team's Choice ──────────────────────── */}
-      <TeamChoiceSection matches={matchVMs} />
+      <TeamChoiceSection matches={matchVMs} teamChoices={initialTeamChoices} />
 
       {/* ── 2. Unified toolbar ─────────────────────── */}
       <div className="bg-surface-elevated rounded-xl border border-gray-200/60 shadow-sm">

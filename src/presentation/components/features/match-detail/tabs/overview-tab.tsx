@@ -10,7 +10,7 @@ import {
     getMatchFormIndex,
     getMatchPrediction,
 } from "@/application/view-models/match-detail/match-detail.selectors"
-import { TrendingUp, Activity, Target, Shield, Sparkles } from "lucide-react"
+import { TrendingUp, Activity, Target, Shield, Sparkles, CheckCircle2 } from "lucide-react"
 
 interface OverviewTabProps {
     match: MatchDetail

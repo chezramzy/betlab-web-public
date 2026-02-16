@@ -1,6 +1,7 @@
 import type {
   Match,
   MatchWithPrediction,
+  TeamChoicePick,
 } from "@/core/entities/fixtures/fixture.entity";
 import type { PredictionType } from "@/core/entities/predictions/prediction.entity";
 import type { IFixtureRepository } from "@/core/repositories/fixture.repository";
@@ -14,10 +15,12 @@ interface FixturesServiceDeps {
 }
 
 export class FixturesService {
+  private readonly fixtureRepository: IFixtureRepository;
   private readonly getFixturesByDateUseCase: GetFixturesByDateUseCase;
   private readonly getFixturesWithPredictionsUseCase: GetFixturesWithPredictionsUseCase;
 
   constructor({ fixtureRepository, predictionRepository }: FixturesServiceDeps) {
+    this.fixtureRepository = fixtureRepository;
     this.getFixturesByDateUseCase = new GetFixturesByDateUseCase(fixtureRepository);
     this.getFixturesWithPredictionsUseCase = new GetFixturesWithPredictionsUseCase(
       fixtureRepository,
@@ -34,5 +37,14 @@ export class FixturesService {
     predictionType?: PredictionType;
   }): Promise<MatchWithPrediction[]> {
     return this.getFixturesWithPredictionsUseCase.execute(options);
+  }
+
+  async getTeamChoiceByDate(options?: {
+    date?: Date;
+    limit?: number;
+  }): Promise<TeamChoicePick[]> {
+    const isoDate =
+      options?.date?.toISOString().split("T")[0] ?? new Date().toISOString().split("T")[0];
+    return this.fixtureRepository.findTeamChoiceByDate(isoDate, options?.limit ?? 2);
   }
 }

@@ -1,4 +1,8 @@
-import type { Match, MatchWithPrediction } from "@/core/entities/fixtures/fixture.entity";
+import type {
+  Match,
+  MatchWithPrediction,
+  TeamChoicePick,
+} from "@/core/entities/fixtures/fixture.entity";
 
 export interface IFixtureRepository {
   findByDate(date: string): Promise<Match[]>;
@@ -8,4 +12,5 @@ export interface IFixtureRepository {
    * This uses the /v1/web/matches/daily endpoint from betlab-api
    */
   findByDateWithPredictions(date: string): Promise<MatchWithPrediction[]>;
+  findTeamChoiceByDate(date: string, limit?: number): Promise<TeamChoicePick[]>;
 }

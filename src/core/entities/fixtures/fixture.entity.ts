@@ -107,3 +107,33 @@ export interface LeagueInfo {
 export interface MatchCountByDate {
   [date: string]: number; // ISO date string -> count
 }
+
+export interface TeamChoicePick {
+  fixtureId: number;
+  kickoffTime: string;
+  homeTeam: {
+    id: number;
+    name: string;
+    logo: string;
+  };
+  awayTeam: {
+    id: number;
+    name: string;
+    logo: string;
+  };
+  league: {
+    id: number;
+    name: string;
+    country: string;
+    logo: string;
+  };
+  recommendedMarket: string;
+  selection: string;
+  teamChoice: "home" | "away" | "draw" | "none";
+  teamName: string;
+  confidence: number;
+  edge?: number;
+  stakeFraction?: number;
+  summary?: string;
+  source: "external_ai" | "fallback_internal";
+}

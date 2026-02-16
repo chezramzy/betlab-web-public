@@ -1,7 +1,11 @@
 import "server-only";
 
 import { cache } from "react";
-import type { Match, MatchWithPrediction } from "@/core/entities/fixtures/fixture.entity";
+import type {
+  Match,
+  MatchWithPrediction,
+  TeamChoicePick,
+} from "@/core/entities/fixtures/fixture.entity";
 import type { PredictionData } from "@/core/entities/predictions/prediction.entity";
 import type { IFixtureRepository } from "@/core/repositories/fixture.repository";
 import { betlabFetch } from "@/infrastructure/services/betlab-api/client";
@@ -129,6 +133,12 @@ interface WebDailyMatchesResponse {
   date: string;
   count: number;
   matches: unknown[];
+}
+
+interface WebTeamChoiceDailyResponse {
+  date: string;
+  count: number;
+  picks: unknown[];
 }
 
 function asRecord(value: unknown): Record<string, unknown> | null {
@@ -278,6 +288,62 @@ function transformWebMatch(item: unknown): MatchWithPrediction | null {
   };
 }
 
+function normalizeTeamChoicePick(item: unknown): TeamChoicePick | null {
+  const row = asRecord(item);
+  if (!row) return null;
+
+  const fixtureId = toNumber(row.fixture_id ?? row.fixtureId);
+  if (!fixtureId) return null;
+
+  const homeTeam = normalizeTeam(row.home_team ?? row.homeTeam);
+  const awayTeam = normalizeTeam(row.away_team ?? row.awayTeam);
+  const league = normalizeLeague(row.league);
+
+  const teamChoiceRaw = row.team_choice ?? row.teamChoice;
+  const normalizedTeamChoice =
+    teamChoiceRaw === "home" || teamChoiceRaw === "away" || teamChoiceRaw === "draw" || teamChoiceRaw === "none"
+      ? teamChoiceRaw
+      : "none";
+
+  return {
+    fixtureId,
+    kickoffTime:
+      typeof row.kickoff_time === "string"
+        ? row.kickoff_time
+        : typeof row.kickoffTime === "string"
+          ? row.kickoffTime
+          : new Date().toISOString(),
+    homeTeam,
+    awayTeam,
+    league,
+    recommendedMarket:
+      typeof row.recommended_market === "string"
+        ? row.recommended_market
+        : typeof row.recommendedMarket === "string"
+          ? row.recommendedMarket
+          : "1X2",
+    selection: typeof row.selection === "string" ? row.selection : "",
+    teamChoice: normalizedTeamChoice,
+    teamName:
+      typeof row.team_name === "string"
+        ? row.team_name
+        : typeof row.teamName === "string"
+          ? row.teamName
+          : "No team",
+    confidence: normalizeProbability(toNumber(row.confidence) ?? 0) ?? 0,
+    edge: toNumber(row.edge),
+    stakeFraction: toNumber(row.stake_fraction ?? row.stakeFraction),
+    summary:
+      typeof row.summary === "string" && row.summary.trim()
+        ? row.summary
+        : undefined,
+    source:
+      row.source === "external_ai" || row.source === "fallback_internal"
+        ? row.source
+        : "fallback_internal",
+  };
+}
+
 async function fetchFixturesWithPredictions(date: string): Promise<MatchWithPrediction[]> {
   const data = await betlabFetch<WebDailyMatchesResponse>("/v1/web/matches/daily", {
     searchParams: { date },
@@ -287,6 +353,17 @@ async function fetchFixturesWithPredictions(date: string): Promise<MatchWithPred
   return data.matches
     .map(transformWebMatch)
     .filter((match): match is MatchWithPrediction => Boolean(match));
+}
+
+async function fetchTeamChoiceByDate(date: string, limit: number): Promise<TeamChoicePick[]> {
+  const data = await betlabFetch<WebTeamChoiceDailyResponse>("/v1/web/team-choice/daily", {
+    searchParams: { date, limit },
+    cache: "no-store",
+  });
+
+  return data.picks
+    .map(normalizeTeamChoicePick)
+    .filter((pick): pick is TeamChoicePick => Boolean(pick));
 }
 
 export class BetlabFixtureRepository implements IFixtureRepository {
@@ -300,5 +377,9 @@ export class BetlabFixtureRepository implements IFixtureRepository {
 
   async findByDateWithPredictions(date: string): Promise<MatchWithPrediction[]> {
     return fetchFixturesWithPredictions(date);
+  }
+
+  async findTeamChoiceByDate(date: string, limit: number = 2): Promise<TeamChoicePick[]> {
+    return fetchTeamChoiceByDate(date, limit);
   }
 }

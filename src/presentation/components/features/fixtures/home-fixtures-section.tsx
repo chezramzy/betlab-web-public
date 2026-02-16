@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 import { HomeFixturesClient } from "./home-fixtures.client";
 import type { PredictionType } from "@/core/entities/predictions/prediction.entity";
+import type { TeamChoicePick } from "@/core/entities/fixtures/fixture.entity";
 import { container } from "@/presentation/di/container";
 
 interface HomeFixturesSectionProps {
@@ -20,5 +21,21 @@ export async function HomeFixturesSection({
     date: asOf,
     predictionType,
   });
-  return <HomeFixturesClient initialMatches={matches} />;
+
+  let teamChoices: TeamChoicePick[] = [];
+  try {
+    teamChoices = await Promise.race([
+      fixturesService.getTeamChoiceByDate({
+        date: asOf,
+        limit: 2,
+      }),
+      new Promise<TeamChoicePick[]>((resolve) => {
+        setTimeout(() => resolve([]), 3500);
+      }),
+    ]);
+  } catch {
+    teamChoices = [];
+  }
+
+  return <HomeFixturesClient initialMatches={matches} initialTeamChoices={teamChoices} />;
 }
