@@ -9,6 +9,8 @@ interface HomeFixturesSectionProps {
   predictionType?: PredictionType;
 }
 
+const TEAM_CHOICE_TIMEOUT_MS = 10000;
+
 export async function HomeFixturesSection({
   asOf,
   predictionType,
@@ -30,7 +32,7 @@ export async function HomeFixturesSection({
         limit: 2,
       }),
       new Promise<TeamChoicePick[]>((resolve) => {
-        setTimeout(() => resolve([]), 3500);
+        setTimeout(() => resolve([]), TEAM_CHOICE_TIMEOUT_MS);
       }),
     ]);
   } catch {

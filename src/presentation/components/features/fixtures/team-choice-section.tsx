@@ -9,8 +9,7 @@ import { MatchCardVM, formatBestMarketPercent } from "@/application/view-models/
 import { formatTeamChoiceLabel } from "@/application/view-models/fixtures/team-choice-label.fr";
 import { cn } from "@/shared/utils";
 
-const MIN_PROB = 0.55;
-const MIN_EDGE = 0.02;
+const MIN_PROB = 0.52;
 const MAX_PICKS = 2;
 const EXCLUDED_SOURCES = new Set(["fallback_1x2"]);
 
@@ -76,16 +75,17 @@ export function TeamChoiceSection({ matches, teamChoices = [] }: TeamChoiceSecti
   }, [teamChoices]);
 
   const fallbackPicks = useMemo<RenderPick[]>(() => {
-    return matches
-      .filter((m) => {
-        if (!m.bestMarket || m.status !== "scheduled") return false;
-        if (EXCLUDED_SOURCES.has(m.bestMarket.source)) return false;
-        if (m.bestMarket.prob < MIN_PROB) return false;
-        if (m.bestMarket.source === "curated" && m.bestMarket.edge !== undefined && m.bestMarket.edge < MIN_EDGE) {
-          return false;
-        }
-        return true;
-      })
+    const scheduled = matches.filter(
+      (m) =>
+        Boolean(m.bestMarket) &&
+        m.status === "scheduled" &&
+        !EXCLUDED_SOURCES.has(m.bestMarket!.source)
+    );
+
+    const strict = scheduled.filter((m) => (m.bestMarket?.prob ?? 0) >= MIN_PROB);
+    const pool = strict.length > 0 ? strict : scheduled;
+
+    return pool
       .sort((a, b) => pickScore(b.bestMarket!) - pickScore(a.bestMarket!))
       .slice(0, MAX_PICKS)
       .map((match) => ({
